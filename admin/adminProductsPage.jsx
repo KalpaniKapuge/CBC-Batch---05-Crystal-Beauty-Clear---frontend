@@ -18,6 +18,9 @@ export default function AdminProductsPage() {
 
   return (
     <div className="w-full h-full max-h-full overflow-y-scroll">
+        <Link to="/admin/add-product" className="absolute text-xl cursor-pointer top-4 right-4 bg-pink-500 text-white p-2 rounded">
+        +
+        </Link>
       <table className="w-full text-center">
         <thead>
           <tr>
