@@ -9,27 +9,25 @@ export default function LoginPage() {
   const navigate = useNavigate();
 
   async function handleLogin() {
-    console.log(email);
-    console.log(password);
+  try {
+    const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/users/login`, {
+      email,
+      password,
+    });
+    toast.success("Login successful");
+    console.log(response.data);
+    localStorage.setItem("token", response.data.token);
 
-    try {
-      const response = await axios.post("import.meta.env.VITE_BACKEND_URL/api/users/login", {
-        email: email,
-        password: password,
-      });
-      toast.success("Login successful");
-      console.log(response.data);
-      localStorage.setItem("token", response.data.token);
-
-      if(response.data.role==="admin"){
-        navigate("/admin");
-      }else{
-        navigate("/");
-      }
-    } catch (e) {
-      toast.error(e.response?.data?.message || "Login failed");
+    if (response.data.role === "admin") {
+      navigate("/admin");
+    } else {
+      navigate("/");
     }
+  } catch (e) {
+    toast.error(e.response?.data?.message || "Login failed");
   }
+}
+
 
   return (
     <div className="w-full h-screen flex items-center justify-center bg-pink-100">
