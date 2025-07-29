@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -32,7 +33,7 @@ export default function LoginPage() {
 
   return (
     <div className="w-full h-screen flex items-center justify-center bg-pink-100">
-      {/* Pink Themed Login Form */}
+      
       <div className="bg-white p-8 rounded-2xl shadow-xl w-80">
         <h2 className="text-2xl font-bold mb-6 text-pink-600 text-center">Login</h2>
         
