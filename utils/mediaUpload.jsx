@@ -29,11 +29,10 @@ export default function mediaUpload(file) {
         return;
       }
 
-      const {
-        data: { publicUrl },
-      } = supabase.storage.from("images").getPublicUrl(newName);
+     const { data } = supabase.storage.from("images").getPublicUrl(newName);
+const publicUrl = data.publicUrl;
+resolve(publicUrl);
 
-      resolve(publicUrl);
     } catch (err) {
       reject("Unexpected error: " + err.message);
     }
