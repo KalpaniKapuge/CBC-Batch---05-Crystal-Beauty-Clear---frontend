@@ -8,3 +8,41 @@ export function getCart(){
     }
     return cart
 }
+
+export function addToCart(product,qty){
+    let cart = getCart();
+    let index = cart.findIndex((item) => {
+        return item.productId == product.productId
+    })
+    if(index== -1){
+        cart [cart.length] = {
+            productId: product.productId,
+            name:product.name,
+            image:product.image[0],
+            price:product.price,
+            labelledPrice:product.labelledPrice,
+            qty:qty
+
+        }
+    }else{
+        const newQty = cart[index].qty+qty;
+        if(newQty<1){
+            removeFromCart(product.productId);
+            return
+        }else{
+            cart[index].qty = newQty;
+        }
+    }
+    localStorage.setItem("cart",JSON.stringify(cart))
+}
+
+export function removeFromCart(productId){
+    let cart = getCart();
+
+    const newCart = cart.filter(
+        (item) => {
+            return item.productId != productId;
+        }
+    )
+    localStorage.setItem("cart",JSON.stringify(newCart))
+}
