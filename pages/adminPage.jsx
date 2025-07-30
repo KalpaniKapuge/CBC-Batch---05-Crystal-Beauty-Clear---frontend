@@ -1,14 +1,24 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 export default function AdminPage(){
-    return(
-        <div className="w-full h-screen flex">
-            <div className="h-full w-[300px] flex flex-col">
+    const location = useLocation();
+    const path = location.pathname;
 
-                <Link to="/admin/products" className="p-4 bg-pink-500 text-white">Products</Link>
-                <Link to="/admin/orders" className="p-4 bg-pink-500 text-white">Orders</Link>
-                <Link to="/admin/users" className="p-4 bg-pink-500 text-white">Users</Link>
-                <Link to="/admin/reviews" className="p-4 bg-pink-500 text-white">Reviews</Link>
+    function getClass(name){
+        if(path.includes(name)){
+            return "bg-accent text-white p-4"
+        }else{
+            return "text-accent p-4"
+        }
+    }
+    return(
+        <div className="w-full h-screen flex bg-accent">
+            <div className="h-full w-[300px] flex flex-col text-accent font-bold text-xl bg-white">
+
+                <Link to="/admin/products" className={getClass("products")}>Products</Link>
+                <Link to="/admin/orders" className={getClass("orders")}>Orders</Link>
+                <Link to="/admin/users" className={getClass("users")}>Users</Link>
+                <Link to="/admin/reviews" className={getClass("review")}>Reviews</Link>
 
             </div>
             

@@ -1,11 +1,59 @@
-import { useState, useEffect } from "react";
+import axios from "axios";
+import { useState } from "react";
+import toast from "react-hot-toast";
 import { BiTrash, BiMinus, BiPlus } from "react-icons/bi";
 import { Link, useLocation } from "react-router-dom";
 
 export default function CheckoutPage() {
   const location = useLocation();
-
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [address, setAddress] = useState("");
   const [cart, setCart] = useState(location.state?.cart || []);
+
+  async function placeOrder() {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error("Please login to place order");
+      return;
+    }
+
+    if (!phoneNumber || !address) {
+      toast.error("Phone number and address are required");
+      return;
+    }
+
+    if (cart.length === 0) {
+      toast.error("Cart is empty");
+      return;
+    }
+
+    const orderInformation = {
+      products: cart.map((item) => ({
+        productId: item.productId, 
+        qty: item.qty,
+      })),
+      phone: phoneNumber,
+      address: address,
+    };
+
+    try {
+      const res = await axios.post(
+        import.meta.env.VITE_BACKEND_URL + "/api/orders",
+        orderInformation,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      );
+      toast.success("Order placed successfully");
+      console.log(res.data);
+      setCart([]); 
+    } catch (err) {
+      console.log(err);
+      toast.error("Error placing order");
+    }
+  }
 
   function removeFromCart(productID) {
     const newCart = cart.filter((item) => item.productID !== productID);
@@ -30,16 +78,39 @@ export default function CheckoutPage() {
 
   return (
     <div className="w-full h-full flex flex-col items-center pt-4 relative">
-      <div className="w-[400px] h-[80px] shadow-2xl absolute top-1 right-1 flex flex-col justify-center items-center bg-white rounded-xl">
+      <div className="w-[400px] min-h-[200px] shadow-2xl absolute top-1 right-1 flex flex-col justify-center items-center bg-white rounded-xl p-4 gap-2">
         <p className="text-2xl text-secondary font-bold">
           Total:
           <span className="text-accent font-bold mx-2">
             Rs.{getTotal().toFixed(2)}
           </span>
         </p>
+
+        <input
+          type="text"
+          placeholder="Phone Number"
+          className="w-full h-[40px] px-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-accent"
+          value={phoneNumber}
+          onChange={(e) => setPhoneNumber(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Address"
+          className="w-full h-[40px] px-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-accent"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+        />
+
+        <button
+          className="bg-accent text-white w-full py-2 rounded hover:bg-secondary font-bold transition-all duration-300"
+          onClick={placeOrder}
+        >
+          Place Order
+        </button>
+
         <Link
           to="/checkout"
-          className="text-white bg-accent px-4 py-2 rounded-lg font-bold hover:bg-secondary transition-all duration-300"
+          className="text-white bg-accent w-full text-center py-2 rounded-lg font-bold hover:bg-secondary transition-all duration-300"
         >
           Proceed to Checkout
         </Link>
