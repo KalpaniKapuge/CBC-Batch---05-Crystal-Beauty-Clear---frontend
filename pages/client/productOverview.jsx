@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import ImageSlider from "../components/ImageSlider"; // adjust path as needed
-import Loading from "../components/Loading"; // adjust path as needed
+import ImageSlider from "../components/imageSlider.jsx"; // adjust path as needed
+import Loading from "../components/loading.jsx"; // adjust path as needed
+import { addToCart, getCart } from "../utils/cart.jsx"; // make sure these are imported correctly
 
 export default function ProductOverviewPage() {
   const params = useParams();
@@ -79,7 +80,19 @@ export default function ProductOverviewPage() {
               )}
             </div>
             <div className="flex gap-4 mt-6">
-              <button className="w-[200px] bg-accent text-white py-2 rounded-2xl hover:bg-accent/80 transition-all duration-300">
+              <button
+                onClick={() => {
+                  console.log("old cart");
+                  console.log(getCart());
+
+                  addToCart(product, 1);
+
+                  console.log("new cart");
+                  console.log(getCart());
+                  toast.success("Added to cart");
+                }}
+                className="w-[200px] bg-accent text-white py-2 rounded-2xl hover:bg-accent/80 transition-all duration-300"
+              >
                 Add To Cart
               </button>
               <button className="w-[200px] bg-accent text-white py-2 rounded-2xl hover:bg-accent/80 transition-all duration-300">
