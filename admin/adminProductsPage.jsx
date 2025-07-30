@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -56,8 +57,13 @@ export default function AdminProductsPage() {
                 <td className="px-4 py-3">{item.stock}</td>
                 <td>
                   <div className="flex justify-center items-center w-full">
-                    <FaTrash className="text-[20px] text-red-500 mx-2 cursor-pointer" />
-                    <FaEdit className="text-[20px] text-blue-500 mx-2 cursor-pointer"/>
+                    <FaTrash className="text-[20px] text-red-500 mx-2 cursor-pointer"  />
+                    <FaEdit className="text-[20px] text-blue-500 mx-2 cursor-pointer" 
+                    onClick = {
+                      () => {
+                        navigate("/admin/edit-product",{state:item})
+                      }
+                    }/>
 
                   </div>
                 </td>

@@ -18,6 +18,7 @@ export default function AdminPage(){
             <Route path="/users" element={<h1>Users</h1>} />
             <Route path="/reviews" element={<h1>Reviews</h1>} />
             <Route path="/products" element={<h1>AdminProductPage</h1>} />
+            <Route path="/edit-product" element={<h1>EditProductPage</h1>} />
             <Route path="*" element={<h1>404 Not Found</h1>} />
         </Routes>
         </div>
