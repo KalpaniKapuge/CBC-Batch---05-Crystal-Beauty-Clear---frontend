@@ -16,7 +16,9 @@ export default function CartPage() {
           </span>
         </p>
         <Link
-          to="/checkout"
+          to="/checkout" state={{
+            cart:cart
+          }}
           className="text-white bg-accent px-4 py-2 rounded-lg font-bold hover:bg-secondary transition-all duration-300"
         >
           Checkout
