@@ -1,25 +1,25 @@
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function Header() {
-  console.log("Header component loaded");
-  return (
-    <div className="bg-pink-500 px-6 py-4 flex justify-between items-center shadow-md">
-      <div className="text-white text-xl font-bold">My Website</div>
+  const navigate = useNavigate();
+  console.log("Header rendered");
+  return(
+    <header className="w-full h-[80px] shadow-2xl">
+      <img onClick={() => {
+        navigate("/");
+      }} src="/logo.png" alt="Logo" className="w-[80px] h-[80px] object-cover cursor-pointer"/>
+      <div className="h-full w-[Calc(100% - 160px)] flex items-center justify-between px-4">
+        <Link to="/" className="text-[20px] font-bold mx-2">Home</Link>
+        <Link to="/products" className="text-[20px] font-bold mx-2">Products</Link>
+        <Link to="/about" className="text-[20px] font-bold mx-2">About</Link>
+        <Link to="/contact" className="text-[20px] font-bold mx-2">Contact</Link>
 
-      <nav className="flex gap-6 text-white text-base font-medium">
-        <Link to="/" className="hover:text-gray-200 transition">Home</Link>
-        <Link to="/login" className="hover:text-gray-200 transition">Login</Link>
-        <Link to="/register" className="hover:text-gray-200 transition">Register</Link>
-        <Link to="/testing" className="hover:text-gray-200 transition">Testing</Link>
-        <a
-          href="https://www.google.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hover:text-gray-200 transition"
-        >
-          Google
-        </a>
-      </nav>
-    </div>
-  );
+      </div>
+      <div className="w-[80px] bg-pink-600">
+
+      </div>
+
+    </header>
+  )
 }
