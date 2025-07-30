@@ -30,8 +30,9 @@ export default function mediaUpload(file) {
       }
 
      const { data } = supabase.storage.from("images").getPublicUrl(newName);
-const publicUrl = data.publicUrl;
-resolve(publicUrl);
+    resolve(data.publicUrl); // ✅ This returns the plain URL string
+
+
 
     } catch (err) {
       reject("Unexpected error: " + err.message);

@@ -34,6 +34,8 @@ export default function AddProductPage() {
 
     try {
       const imageUrls = await Promise.all(promiseArray);
+      console.log("Image URLs to save:", imageUrls);  // ✅ Log what is being saved
+
       const altNamesArray = altNames.split(",").map((name) => name.trim());
 
       const product = {

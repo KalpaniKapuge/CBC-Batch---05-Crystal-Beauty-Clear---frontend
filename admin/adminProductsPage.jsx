@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import mediaUpload from "../utils/mediaUpload.jsx";
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState([]);
@@ -19,44 +18,63 @@ export default function AdminProductsPage() {
   }, []);
 
   return (
-    <div className="w-full h-full max-h-full overflow-y-scroll">
-        <Link to="/admin/add-product" className="absolute text-xl cursor-pointer top-4 right-4 bg-pink-500 text-white p-2 rounded">
-        +
-        </Link>
-      <table className="w-full text-center">
-        <thead>
-          <tr>
-            <th>ProductId</th>
-            <th>Name</th>
-            <th>Image</th>
-            <th>Labelled Price</th>
-            <th>Price</th>
-            <th>Stock</th>
-          </tr>
-        </thead>
-        <tbody>
-          {products.map((item, index) => (
-            <tr key={index}>
-              <td>{item.productId}</td>
-              <td>{item.name}</td>
-              <td>
-                <img
-                  src={item.images?.[0]}
-                  alt={item.name}
-                  className="w-[50px] h-[50px] object-cover"
-                />
-              </td>
-              <td>{item.labelledPrice}</td>
-              <td>{item.price}</td>
-              <td>{item.stock}</td>
+    <div className="w-full h-full p-6 bg-gradient-to-br from-gray-100 to-gray-200 relative min-h-screen">
+      <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">
+        Product Management
+      </h1>
+
+      <div className="overflow-x-auto rounded-lg shadow-xl bg-white p-4">
+        <table className="w-full text-sm text-left text-gray-700">
+          <thead className="bg-gray-300 text-gray-800 sticky top-0 z-10">
+            <tr>
+              <th className="px-4 py-3">Product ID</th>
+              <th className="px-4 py-3">Name</th>
+              <th className="px-4 py-3">Image</th>
+              <th className="px-4 py-3">Labelled Price</th>
+              <th className="px-4 py-3">Price</th>
+              <th className="px-4 py-3">Stock</th>
+              <th className="px-4 py-3">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {products.map((item, index) => (
+              <tr
+                key={index}
+                className="border-b hover:bg-gray-100 transition duration-200"
+              >
+                <td className="px-4 py-3">{item.productId}</td>
+                <td className="px-4 py-3">{item.name}</td>
+                <td className="px-4 py-3">
+                  <img
+                    src={item.images?.[0]}
+                    alt={item.name}
+                    className="w-16 h-16 object-cover rounded-md shadow-md border"
+                  />
+                </td>
+                <td className="px-4 py-3">Rs. {item.labelledPrice}</td>
+                <td className="px-4 py-3">Rs. {item.price}</td>
+                <td className="px-4 py-3">{item.stock}</td>
+                <td>
+                  <div className="flex justify-center items-center w-full">
+                    <FaTrash className="text-[20px] text-red-500 mx-2 cursor-pointer" />
+                    <FaEdit className="text-[20px] text-blue-500 mx-2 cursor-pointer"/>
+
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Add Product Button at Bottom-Right */}
+      <Link
+        to="/admin/add-product"
+        className="fixed bottom-6 right-6 bg-pink-600 hover:bg-pink-700 text-white text-3xl px-5 py-3 rounded-full shadow-lg transition duration-300 z-50"
+        title="Add Product"
+      >
+        +
+      </Link>
     </div>
   );
 }
-
-
-//https://ofviqmvabgpkantxleui.supabase.co
-//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9mdmlxbXZhYmdwa2FudHhsZXVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4MTE1NDgsImV4cCI6MjA2OTM4NzU0OH0.P-I_Mxr6k9JgmFHioJQ827swKfRi-aNQFSnxgvpUjW4
