@@ -1,5 +1,8 @@
 import AdminProductsPage from '../admin/adminProductsPage.jsx';
-import ProductCard from '../src/components/productCard.jsx';
+import Header from '../src/components/header.jsx'
+import { Route,Routes } from 'react-router-dom';
+
+
 
 export default function HomePage() {
   return (
@@ -12,6 +15,7 @@ export default function HomePage() {
           <Route path="/" element={<h1>Home</h1>}/>
           <Route path="/products" element={<AdminProductsPage/>} />
           <Route path="/contact" element={<h1 className='text-2xl font-bold'>Contact</h1>} />
+          <Route path="/overview:id" element={<h1>ProductOverviewPage</h1>}/>
           <Route path="/*" element={<h1 className='text-2xl font-bold'>404 Not Found</h1>} />
           </Routes>
           

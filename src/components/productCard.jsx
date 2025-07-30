@@ -2,7 +2,7 @@ import React from "react";
 
 export default function ProductCard({ product }) {
   return (
-    <div className="card p-4 border rounded shadow-md bg-white w-full max-w-sm">
+    <Link  to = {"/overview/" +product.productId }className="card p-4 border rounded shadow-md bg-white w-full max-w-sm">
       <img
         src={product.images && product.images.length > 0 ? product.images[0] : "https://via.placeholder.com/150"}
         alt={product.name}
@@ -19,6 +19,6 @@ export default function ProductCard({ product }) {
           Buy Now
         </button>
       </div>
-    </div>
+    </Link>
   );
 }
