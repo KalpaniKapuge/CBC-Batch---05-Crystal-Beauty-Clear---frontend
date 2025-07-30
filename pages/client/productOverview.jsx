@@ -27,15 +27,23 @@ export default function ProductOverviewPage(){
     )
     return(
         
-            <div className="w-full h-full flex">
-                <div className="w-[50%] h-full ">
-
+            <>
+            {status == "success" && (
+                <div className="w-full h-full flex">
+                <div className="w-[50%] h-full flex justify-center items-center ">
+                    <ImageSlider images={product.images}/>
                 </div>
                 <div className="h-full w-[50%]">
                      This is overview page for product {JSON.stringify(product)}
                 </div>
 
             </div>
+            )}
+
+            {
+                status == "loading" && <Loading/>
+            }
+            </>
           
     )
 }
