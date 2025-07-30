@@ -16,7 +16,9 @@ export default function Header() {
         <Link to="/contact" className="text-[20px] font-bold mx-2">Contact</Link>
 
       </div>
-      <div className="w-[80px] bg-pink-600">
+      <div className="w-[80px] bg-pink-600 flex justify-center items-center">
+        <Link to="/cart" className="text-[20px] font-bold mex-2">
+        <BsCarts/></Link>
 
       </div>
 

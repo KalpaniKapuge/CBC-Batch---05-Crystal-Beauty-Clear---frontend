@@ -46,3 +46,13 @@ export function removeFromCart(productId){
     )
     localStorage.setItem("cart",JSON.stringify(newCart))
 }
+
+export function getTotal(){
+    let cart = getCart();
+
+    let total = 0;
+    for(let i=0; i<cart.length;i++){
+        total += cart[i].price*cart[i].qty
+    }
+    return total;
+}
