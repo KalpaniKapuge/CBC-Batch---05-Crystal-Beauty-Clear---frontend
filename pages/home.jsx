@@ -19,6 +19,7 @@ export default function HomePage() {
           <Route path="/contact" element={<h1 className='text-2xl font-bold'>Contact</h1>} />
           <Route path="/overview:id" element={<h1>ProductOverviewPage</h1>}/>
           <Route path='/checkout' element={<CheckoutPage/>}/>
+           <Route path="/search" element={SearchProductsPage} />
           <Route path="/*" element={<h1 className='text-2xl font-bold'>404 Not Found</h1>} />
           </Routes>
           

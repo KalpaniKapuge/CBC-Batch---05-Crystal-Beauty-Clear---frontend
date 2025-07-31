@@ -40,6 +40,9 @@ export default function Header() {
         <Link to="/contact" className="text-[20px] font-bold mx-2">
           Contact
         </Link>
+        <Link to="/search" className="text-[20px] font-bold mx-2">
+          Search
+        </Link>
       </div>
 
       <div className="hidden md:flex w-[80px] bg-pink-600 justify-center items-center">

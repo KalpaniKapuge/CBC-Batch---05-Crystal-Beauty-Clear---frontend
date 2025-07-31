@@ -22,6 +22,7 @@ function App() {
           <Route path="/testing" element={<TestingPage />} />
           <Route path="/admin/add-product" element={<AddProductPage />} />
           <Route path="/admin/products" element={<AdminProductsPage />} />
+          <Route path="/forget" element={<ForgetPasswordPage/>}/>
 
         </Routes>
       </div>

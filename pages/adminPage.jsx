@@ -1,8 +1,11 @@
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { Link, useLocation } from "react-router-dom";
 
 export default function AdminPage(){
     const location = useLocation();
     const path = location.pathname;
+    const [status,setStatus] = useState("loading");
 
     function getClass(name){
         if(path.includes(name)){
@@ -11,6 +14,38 @@ export default function AdminPage(){
             return "text-accent p-4"
         }
     }
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if(!token){
+            setStatus("unauthenticated");
+            window.location.href="/login";
+        }else{
+            axios.get(import.meta.env.VITE_BACKEND_URL+"/api/users/",
+                {
+                    headers:{
+                        Authorization:'Bearer ${token}'
+                    }
+                }
+            ).then((response) => {
+                if(response.data.role !== "admin"){
+                    setStatus("unauthorized");
+                    toast.error("You are not authorized to access this page")
+                    window.location.href="/";
+                }else{
+                    setStatus("authenticate")
+                }
+            }).catch((error) => {
+                console.error(error);
+                setStatus("Unauthenticated");
+                toast.error("You are not authenticated, please login!");
+                window.location.href = "/login";
+            })
+        }
+    },[status]
+)
+
+    
     return(
         <div className="w-full h-screen flex bg-accent">
             <div className="h-full w-[300px] flex flex-col text-accent font-bold text-xl bg-white">
