@@ -60,13 +60,12 @@ export default function AdminOrdersPage() {
     return orders[activeOrderIndex];
   }, [activeOrderIndex, orders]);
 
-  // Helper to format money (assuming cents or integer)
+  // Helper to format money (assuming integer)
   const formatMoney = (amount) => {
     if (typeof amount !== "number") return "-";
     return `Rs. ${amount.toLocaleString()}`;
   };
 
-  // Determine if the object is product-like based on sample shape
   const isProductObject = (obj) =>
     obj &&
     (obj.productId || obj._id) &&
@@ -160,21 +159,27 @@ export default function AdminOrdersPage() {
                     : ""}
                 </div>
               </div>
-              <button
-                aria-label="Close"
-                onClick={() => setIsModalOpen(false)}
-                className="text-gray-600 hover:text-gray-900 text-xl"
-              >
-                ✕
-              </button>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => window.print()}
+                  className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-sm transition"
+                >
+                  Print
+                </button>
+                <button
+                  aria-label="Close"
+                  onClick={() => setIsModalOpen(false)}
+                  className="px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 text-xl transition"
+                >
+                  ✕
+                </button>
+              </div>
             </div>
 
             {activeOrder ? (
               <div className="space-y-6">
-                {/* If it's a product-like object, show product details */}
                 {isProductObject(activeOrder) ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {/* Images */}
                     <div className="space-y-3">
                       {Array.isArray(activeOrder.images) &&
                       activeOrder.images.length > 0 ? (
@@ -199,7 +204,6 @@ export default function AdminOrdersPage() {
                       )}
                     </div>
 
-                    {/* Meta */}
                     <div className="space-y-3">
                       <div>
                         <div className="text-lg font-semibold mb-1">
@@ -264,9 +268,7 @@ export default function AdminOrdersPage() {
                     </div>
                   </div>
                 ) : (
-                  // Otherwise, assume it's an order object and show order details
                   <div className="space-y-6">
-                    {/* Customer Info */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="bg-gray-50 p-4 rounded-lg border">
                         <h3 className="font-semibold mb-2">
@@ -300,7 +302,6 @@ export default function AdminOrdersPage() {
                       </div>
                     </div>
 
-                    {/* Items */}
                     {Array.isArray(activeOrder.items) &&
                     activeOrder.items.length > 0 ? (
                       <div className="bg-white border rounded-lg shadow-sm p-4">
@@ -359,7 +360,6 @@ export default function AdminOrdersPage() {
                       </div>
                     )}
 
-                    {/* Summary */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="bg-gray-50 p-4 rounded border">
                         <h3 className="font-semibold mb-2">Payment</h3>
@@ -422,7 +422,6 @@ export default function AdminOrdersPage() {
                       </div>
                     </div>
 
-                    {/* Status */}
                     <div className="bg-gray-50 p-4 rounded border">
                       <h3 className="font-semibold mb-2">Status</h3>
                       <div className="flex flex-wrap gap-6">
