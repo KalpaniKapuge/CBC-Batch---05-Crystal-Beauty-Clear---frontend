@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import Modal from "react-modal";
+import toast from "react-hot-toast";
 
 // Accessibility: attach to root
 Modal.setAppElement("#root");
@@ -22,32 +23,39 @@ export default function AdminOrdersPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [activeOrderIndex, setActiveOrderIndex] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [statusUpdating, setStatusUpdating] = useState(false);
 
   // Fetch orders once
-  useEffect(() => {
+  const fetchOrders = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
-      alert("Please login first");
+      toast.error("Please login first");
       setIsLoading(false);
       return;
     }
 
-    axios
-      .get(`${import.meta.env.VITE_BACKEND_URL}/api/orders`, {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      })
-      .then((res) => {
-        setOrders(res.data || []);
-      })
-      .catch((e) => {
-        alert(
-          "Error fetching orders: " +
-            (e.response?.data?.message || "Unknown error")
-        );
-      })
-      .finally(() => setIsLoading(false));
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/orders`,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      );
+      setOrders(res.data || []);
+    } catch (e) {
+      toast.error(
+        "Error fetching orders: " +
+          (e.response?.data?.message || "Unknown error")
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchOrders();
   }, []);
 
   const activeOrder = useMemo(() => {
@@ -69,7 +77,44 @@ export default function AdminOrdersPage() {
   const isProductObject = (obj) =>
     obj &&
     (obj.productId || obj._id) &&
-    ("price" in obj || "labelledPrice" in obj);
+    (Object.prototype.hasOwnProperty.call(obj, "price") ||
+      Object.prototype.hasOwnProperty.call(obj, "labelledPrice"));
+
+  const handleStatusChange = async (newStatus) => {
+    if (!activeOrder) return;
+    if (statusUpdating) return;
+    setStatusUpdating(true);
+    const token = localStorage.getItem("token");
+    try {
+      await axios.put(
+        `${import.meta.env.VITE_BACKEND_URL}/api/orders/${activeOrder.orderId}/status`,
+        { status: newStatus },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      );
+      // Update locally
+      setOrders((prev) => {
+        const clone = [...prev];
+        clone[activeOrderIndex] = {
+          ...clone[activeOrderIndex],
+          status: newStatus,
+        };
+        return clone;
+      });
+      toast.success("Order status updated");
+    } catch (e) {
+      toast.error(
+        "Error updating order status: " +
+          (e.response?.data?.message || "Unknown error")
+      );
+      console.error(e);
+    } finally {
+      setStatusUpdating(false);
+    }
+  };
 
   return (
     <div className="w-full h-full p-6 overflow-x-auto font-sans">
@@ -146,11 +191,11 @@ export default function AdminOrdersPage() {
             overlayClassName="fixed inset-0 bg-black/50 flex items-start justify-center z-50"
             className="max-w-4xl w-full mt-16 bg-white rounded-2xl shadow-xl p-6 outline-none relative"
           >
-            <div className="flex justify-between items-start mb-4">
+            <div className="flex justify-between items-start mb-4 flex-wrap gap-4">
               <div>
                 <h2 className="text-xl font-bold">
                   {isProductObject(activeOrder)
-                    ? activeOrder.name || "Product Detail"
+                    ? activeOrder?.name || "Product Detail"
                     : `Order #${activeOrder?.orderId || "-"}`}
                 </h2>
                 <div className="text-sm text-gray-500">
@@ -159,7 +204,49 @@ export default function AdminOrdersPage() {
                     : ""}
                 </div>
               </div>
-              <div className="flex gap-3">
+              <div className="flex gap-3 flex-wrap">
+                {/* Status display + selector */}
+                {activeOrder && !isProductObject(activeOrder) && (
+                  <div className="flex items-center gap-2">
+                    <div className="flex flex-col">
+                      <div className="text-xs font-semibold text-gray-600">
+                        Status
+                      </div>
+                      <div className="flex gap-2 items-center">
+                        <span
+                          className={`font-bold ${
+                            activeOrder.status === "Completed"
+                              ? "text-green-600"
+                              : activeOrder.status === "Pending"
+                              ? "text-yellow-500"
+                              : "text-red-500"
+                          }`}
+                        >
+                          {activeOrder.status
+                            ? activeOrder.status.toUpperCase()
+                            : "-"}
+                        </span>
+                        <select
+                          disabled={statusUpdating}
+                          defaultValue=""
+                          onChange={(e) => {
+                            const v = e.target.value;
+                            if (v) handleStatusChange(v);
+                          }}
+                          className="border rounded px-2 py-1 text-sm"
+                        >
+                          <option value="" disabled>
+                            Change Status
+                          </option>
+                          <option value="Pending">Pending</option>
+                          <option value="Completed">Completed</option>
+                          <option value="Canceled">Canceled</option>
+                          <option value="Returned">Returned</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                )}
                 <button
                   onClick={() => window.print()}
                   className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-sm transition"
@@ -216,7 +303,8 @@ export default function AdminOrdersPage() {
                             </div>
                           )}
                         <div className="text-sm text-gray-700">
-                          {activeOrder.description || "No description provided."}
+                          {activeOrder.description ||
+                            "No description provided."}
                         </div>
                       </div>
 
@@ -405,7 +493,9 @@ export default function AdminOrdersPage() {
                           {activeOrder.shippingPrice != null && (
                             <div className="flex justify-between">
                               <div>Shipping:</div>
-                              <div>{formatMoney(activeOrder.shippingPrice)}</div>
+                              <div>
+                                {formatMoney(activeOrder.shippingPrice)}
+                              </div>
                             </div>
                           )}
                           {activeOrder.taxPrice != null && (
