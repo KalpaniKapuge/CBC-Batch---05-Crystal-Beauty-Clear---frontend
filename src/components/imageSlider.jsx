@@ -32,3 +32,7 @@ export default function ImageSlider(props) {
     </div>
   );
 }
+
+//1044000332395-in4om9f6ignl14euilehl25qr3m4f91d.apps.googleusercontent.com
+
+// secret - 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

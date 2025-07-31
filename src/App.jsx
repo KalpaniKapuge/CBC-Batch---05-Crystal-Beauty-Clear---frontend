@@ -10,6 +10,7 @@ import AdminProductsPage from '../admin/adminProductsPage.jsx';
 
 function App() {
   return (
+    <GoogleOAuthProvider clientId="1044000332395-in4om9f6ignl14euilehl25qr3m4f91d.apps.googleusercontent.com">
     <BrowserRouter>
       <div>
         <Header />
@@ -25,6 +26,7 @@ function App() {
         </Routes>
       </div>
     </BrowserRouter>
+    </GoogleOAuthProvider>
   );
 }
 
