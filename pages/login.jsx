@@ -3,6 +3,7 @@ import axios from "axios";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { GrGoogle } from "react-icons/gr";
+import { useGoogleLogin } from "@react-oauth/google";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -43,6 +44,26 @@ export default function LoginPage() {
     // placeholder: integrate OAuth redirect
     toast("Google login clicked");
   };
+
+  const gooleLogin = useGoogleLogin({
+    onSuccess:(response) => {
+      const accessToken = response.access_token
+      axios.post(import.meta.env.VITE_BACKEND_URL+"/api/users/login/google",
+        {
+          accessToken:accessToken
+        }
+      ).then((response) => {
+        toast.success("Login Successfull")
+        const token = response.data.token
+        localStorage.setItem("token",token)
+        if(response.data.role==="admin"){
+          navigate("/admin/")
+        }else{
+          navigate("/")
+        }
+      })
+    }
+  })
 
   return (
     <div className="w-full h-screen flex items-center justify-center bg-pink-50">
