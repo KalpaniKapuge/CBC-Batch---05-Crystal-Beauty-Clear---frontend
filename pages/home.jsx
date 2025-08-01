@@ -237,14 +237,14 @@ export default function HomePage() {
 
       <div className="relative max-w-7xl mx-auto px-6 py-16">
         <div className="text-center mb-12">
-  <h1 className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-300 via-pink-400 to-pink-500 mb-6 leading-tight" style={{ filter: 'drop-shadow(0 0 4px rgba(219, 112, 147, 0.3))' }}>
-    Welcome to Crystal Bloom
-  </h1>
-  <div className="w-24 h-1 bg-gradient-to-r from-pink-300 to-pink-400 mx-auto mb-6 rounded-full shadow-sm"></div>
-  <p className="text-xl text-pink-500 max-w-3xl mx-auto leading-relaxed font-medium">
-    Discover beauty essentials crafted to make you shine brighter than ever before
-  </p>
-</div>
+      <h1 className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-300 via-pink-400 to-pink-500 mb-6 leading-tight" style={{ filter: 'drop-shadow(0 0 4px rgba(219, 112, 147, 0.3))' }}>
+        Welcome to Crystal Bloom
+      </h1>
+      <div className="w-24 h-1 bg-gradient-to-r from-pink-300 to-pink-400 mx-auto mb-6 rounded-full shadow-sm"></div>
+      <p className="text-xl text-pink-500 max-w-3xl mx-auto leading-relaxed font-medium">
+        Discover beauty essentials crafted to make you shine brighter than ever before
+      </p>
+      </div>
 
 
         {/* Enhanced Search bar */}
