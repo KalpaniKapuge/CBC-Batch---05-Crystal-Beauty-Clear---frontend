@@ -3,6 +3,7 @@ import Header from "./components/header.jsx";
 import HomePage from "../pages/home.jsx";
 import toast, { Toaster } from "react-hot-toast";
 
+
 // Placeholder pages
 function About() {
   return (
@@ -16,29 +17,24 @@ function About() {
     </div>
   );
 }
-
 function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="p-8 bg-white rounded-xl shadow-lg">
         <h2 className="text-2xl font-bold text-pink-600 mb-4">Login</h2>
-        {/* login form stub */}
       </div>
     </div>
   );
 }
-
 function Register() {
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="p-8 bg-white rounded-xl shadow-lg">
         <h2 className="text-2xl font-bold text-pink-600 mb-4">Register</h2>
-        {/* register form stub */}
       </div>
     </div>
   );
 }
-
 function Cart() {
   return (
     <div className="min-h-screen flex items-center justify-center">
@@ -61,7 +57,6 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/cart" element={<Cart />} />
-        {/* extend with other routes as needed */}
       </Routes>
     </>
   );

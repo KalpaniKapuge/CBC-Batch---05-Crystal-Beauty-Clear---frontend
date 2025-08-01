@@ -3,18 +3,16 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { BsCart } from "react-icons/bs";
 import { Link, useNavigate } from "react-router-dom";
 
+
 // Lightweight JWT decoder for payload (no external lib)
 function safeParseJwt(token) {
   try {
     const parts = token.split(".");
     if (parts.length !== 3) return null;
     let payload = parts[1];
-    // base64url to base64
     payload = payload.replace(/-/g, "+").replace(/_/g, "/");
-    // add padding
     const pad = payload.length % 4 === 0 ? "" : "=".repeat(4 - (payload.length % 4));
     const decoded = atob(payload + pad);
-    // percent-encode to handle UTF-8 properly
     const json = decodeURIComponent(
       decoded
         .split("")
@@ -57,7 +55,6 @@ export default function Header() {
 
   return (
     <header className="w-full h-20 sticky top-0 z-50 flex items-center px-6 md:px-12 bg-gradient-to-r from-pink-50 to-pink-100 shadow-xl">
-      {/* Mobile menu button */}
       <button
         aria-label="Open menu"
         className="md:hidden flex items-center text-pink-600 p-2 rounded-full hover:bg-pink-50 transition"
@@ -66,18 +63,13 @@ export default function Header() {
         <GiHamburgerMenu size={24} />
       </button>
 
-      {/* Logo */}
-      <div
-        className="flex items-center gap-2 cursor-pointer flex-shrink-0"
-        onClick={goHome}
-      >
+      <div className="flex items-center gap-2 cursor-pointer flex-shrink-0" onClick={goHome}>
         <img src="/logo.png" alt="Logo" className="w-16 h-16 object-contain" />
         <span className="hidden sm:inline font-extrabold text-2xl text-pink-700 tracking-tight">
           Crystal Bloom
         </span>
       </div>
 
-      {/* Desktop nav */}
       <nav className="hidden md:flex flex-1 justify-center gap-10 font-medium text-gray-700">
         <Link
           to="/"
@@ -86,16 +78,14 @@ export default function Header() {
           Home
         </Link>
         <Link
-          to="/search"
+          to="/about"
           className="relative px-3 py-2 rounded-full hover:text-white hover:bg-pink-600 transition-all duration-200"
         >
-          Search
+          About
         </Link>
       </nav>
 
-      {/* Right-side actions */}
       <div className="flex items-center gap-4 ml-auto">
-        {/* Auth / User */}
         {!user ? (
           <div className="hidden md:flex items-center gap-3">
             <Link
@@ -132,8 +122,7 @@ export default function Header() {
           </div>
         )}
 
-        {/* Desktop Cart (after auth) */}
-        <div className="hidden md:flex items-center relative">
+        <div className="hidden md:flex items-center">
           <Link
             to="/cart"
             aria-label="Go to cart"
@@ -142,8 +131,6 @@ export default function Header() {
             <BsCart size={24} />
           </Link>
         </div>
-
-        {/* Mobile cart icon */}
         <Link
           to="/cart"
           className="md:hidden flex items-center justify-center w-12 h-12 bg-pink-600 rounded-full text-white hover:bg-pink-700 transition-colors duration-200"
@@ -153,10 +140,8 @@ export default function Header() {
         </Link>
       </div>
 
-      {/* Side drawer for mobile */}
       {sideDrawerOpened && (
         <div className="fixed inset-0 z-50 flex md:hidden">
-          {/* backdrop */}
           <div
             className="flex-1 bg-black bg-opacity-40 backdrop-blur-sm"
             onClick={closeDrawer}
@@ -172,14 +157,8 @@ export default function Header() {
                   navigate("/");
                 }}
               >
-                <img
-                  src="/logo.png"
-                  alt="Logo"
-                  className="w-14 h-14 object-contain"
-                />
-                <span className="font-bold text-lg text-pink-700">
-                  GlamCart
-                </span>
+                <img src="/logo.png" alt="Logo" className="w-14 h-14 object-contain" />
+                <span className="font-bold text-lg text-pink-700">Crystal Bloom</span>
               </div>
               <button
                 aria-label="Close menu"
@@ -190,42 +169,22 @@ export default function Header() {
               </button>
             </div>
             <nav className="flex flex-col px-6 py-8 space-y-4 text-base font-semibold text-gray-700">
-              <Link
-                to="/"
-                onClick={closeDrawer}
-                className="hover:text-pink-600 rounded-md px-2 py-1 transition"
-              >
+              <Link to="/" onClick={closeDrawer} className="hover:text-pink-600 rounded-md px-2 py-1 transition">
                 Home
               </Link>
-              <Link
-                to="/search"
-                onClick={closeDrawer}
-                className="hover:text-pink-600 rounded-md px-2 py-1 transition"
-              >
-                Search
+              <Link to="/about" onClick={closeDrawer} className="hover:text-pink-600 rounded-md px-2 py-1 transition">
+                About
               </Link>
-              <Link
-                to="/cart"
-                onClick={closeDrawer}
-                className="flex items-center space-x-3 hover:text-pink-600 rounded-md px-2 py-1 transition"
-              >
+              <Link to="/cart" onClick={closeDrawer} className="flex items-center space-x-3 hover:text-pink-600 rounded-md px-2 py-1 transition">
                 <BsCart size={22} />
                 <span>Cart</span>
               </Link>
               {!user ? (
                 <>
-                  <Link
-                    to="/login"
-                    onClick={closeDrawer}
-                    className="hover:text-pink-600 rounded-md px-2 py-1 transition"
-                  >
+                  <Link to="/login" onClick={closeDrawer} className="hover:text-pink-600 rounded-md px-2 py-1 transition">
                     Login
                   </Link>
-                  <Link
-                    to="/register"
-                    onClick={closeDrawer}
-                    className="hover:text-pink-600 rounded-md px-2 py-1 transition"
-                  >
+                  <Link to="/register" onClick={closeDrawer} className="hover:text-pink-600 rounded-md px-2 py-1 transition">
                     Register
                   </Link>
                 </>
