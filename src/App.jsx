@@ -8,27 +8,14 @@ import EditProductPage from "../admin/editProductPage.jsx";
 import CartPage from "../pages/client/cart.jsx";
 import CheckoutPage from "../pages/client/checkout.jsx";
 import SearchProductPage from "../pages/client/searchProductsPage.jsx";
-
-function AboutPage() {
-  return (
-    <div className="flex items-center justify-center">
-      <h1 className="text-center text-3xl font-bold text-pink-600">About Us</h1>
-    </div>
-  );
-}
-
-function ContactPage() {
-  return (
-    <div className="flex items-center justify-center">
-      <h1 className="text-center text-3xl font-bold text-pink-600">Contact Us</h1>
-    </div>
-  );
-}
+import LoginPage from "../pages/login.jsx";
+import RegisterPage from "../pages/register.jsx";
+import ForgotPasswordPage from "../pages/forgetPassword.jsx";
 
 function NotFoundPage() {
   return (
-    <div className="flex items-center justify-center">
-      <h1 className="text-center text-3xl font-bold text-red-600">404 Not Found</h1>
+    <div className="flex items-center justify-center h-full">
+      <h1 className="text-center text-4xl font-bold text-red-600">404 Not Found</h1>
     </div>
   );
 }
@@ -36,17 +23,25 @@ function NotFoundPage() {
 export default function App() {
   return (
     <Routes>
-      <Route path="/" element={<MainLayout />}> {/* layout wrapper */}
+      <Route path="/" element={<MainLayout />}>
         <Route index element={<HomePage />} />
-        <Route path="products" element={<AdminProductsPage />} />
-        <Route path="orders" element={<AdminOrdersPage />} />
-        <Route path="add-product" element={<AddProductPage />} />
-        <Route path="edit-product" element={<EditProductPage />} />
+
+        {/* Client */}
         <Route path="cart" element={<CartPage />} />
         <Route path="checkout" element={<CheckoutPage />} />
         <Route path="search" element={<SearchProductPage />} />
-        <Route path="about" element={<AboutPage />} />
-        <Route path="contact" element={<ContactPage />} />
+
+        {/* Auth */}
+        <Route path="login" element={<LoginPage />} />
+        <Route path="register" element={<RegisterPage />} />
+        <Route path="forgot-password" element={<ForgotPasswordPage />} />
+
+        {/* Admin */}
+        <Route path="admin/products" element={<AdminProductsPage />} />
+        <Route path="admin/orders" element={<AdminOrdersPage />} />
+        <Route path="admin/add-product" element={<AddProductPage />} />
+        <Route path="admin/edit-product" element={<EditProductPage />} />
+
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>

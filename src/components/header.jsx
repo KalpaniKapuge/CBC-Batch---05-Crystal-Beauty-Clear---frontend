@@ -3,6 +3,30 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { BsCart } from "react-icons/bs";
 import { Link, useNavigate } from "react-router-dom";
 
+// Lightweight JWT decoder for payload (no external lib)
+function safeParseJwt(token) {
+  try {
+    const parts = token.split(".");
+    if (parts.length !== 3) return null;
+    let payload = parts[1];
+    // base64url to base64
+    payload = payload.replace(/-/g, "+").replace(/_/g, "/");
+    // add padding
+    const pad = payload.length % 4 === 0 ? "" : "=".repeat(4 - (payload.length % 4));
+    const decoded = atob(payload + pad);
+    // percent-encode to handle UTF-8 properly
+    const json = decodeURIComponent(
+      decoded
+        .split("")
+        .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+        .join("")
+    );
+    return JSON.parse(json);
+  } catch {
+    return null;
+  }
+}
+
 export default function Header() {
   const [sideDrawerOpened, setSideDrawerOpened] = useState(false);
   const [user, setUser] = useState(null);
@@ -11,10 +35,22 @@ export default function Header() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      // placeholder: decode or fetch user if needed; minimal display
-      setUser({});
+      const decoded = safeParseJwt(token);
+      if (decoded) {
+        setUser({
+          firstName: decoded.firstName || "",
+          lastName: decoded.lastName || "",
+          role: decoded.role || "",
+        });
+      }
     }
   }, []);
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    setUser(null);
+    navigate("/login");
+  };
 
   const closeDrawer = () => setSideDrawerOpened(false);
   const goHome = () => navigate("/");
@@ -37,22 +73,18 @@ export default function Header() {
         <Link to="/" className="hover:text-pink-600 transition-colors duration-200">
           Home
         </Link>
-        <Link to="/products" className="hover:text-pink-600 transition-colors duration-200">
-          Products
-        </Link>
-        <Link to="/about" className="hover:text-pink-600 transition-colors duration-200">
-          About
-        </Link>
-        <Link to="/contact" className="hover:text-pink-600 transition-colors duration-200">
-          Contact
-        </Link>
         <Link to="/search" className="hover:text-pink-600 transition-colors duration-200">
           Search
         </Link>
-        <Link to="/cart" className="relative flex items-center justify-center w-12 h-12 bg-pink-600 rounded-full text-white hover:bg-pink-700 transition-colors duration-200" aria-label="Go to cart">
+        <Link
+          to="/cart"
+          className="relative flex items-center justify-center w-12 h-12 bg-pink-600 rounded-full text-white hover:bg-pink-700 transition-colors duration-200"
+          aria-label="Go to cart"
+        >
           <BsCart size={24} />
         </Link>
-        {!user && (
+
+        {!user ? (
           <>
             <Link
               to="/login"
@@ -67,6 +99,21 @@ export default function Header() {
               Register
             </Link>
           </>
+        ) : (
+          <div className="flex items-center gap-4">
+            <div className="text-sm">
+              {user.firstName} {user.lastName}
+              {user.role === "admin" && (
+                <span className="ml-1 text-xs bg-yellow-100 px-2 rounded">Admin</span>
+              )}
+            </div>
+            <button
+              onClick={logout}
+              className="px-3 py-1 bg-gray-100 rounded hover:bg-gray-200 text-sm"
+            >
+              Logout
+            </button>
+          </div>
         )}
       </nav>
 
@@ -109,15 +156,6 @@ export default function Header() {
               <Link to="/" onClick={closeDrawer} className="hover:text-pink-600">
                 Home
               </Link>
-              <Link to="/products" onClick={closeDrawer} className="hover:text-pink-600">
-                Products
-              </Link>
-              <Link to="/about" onClick={closeDrawer} className="hover:text-pink-600">
-                About
-              </Link>
-              <Link to="/contact" onClick={closeDrawer} className="hover:text-pink-600">
-                Contact
-              </Link>
               <Link to="/search" onClick={closeDrawer} className="hover:text-pink-600">
                 Search
               </Link>
@@ -125,7 +163,7 @@ export default function Header() {
                 <BsCart size={24} />
                 <span>Cart</span>
               </Link>
-              {!user && (
+              {!user ? (
                 <>
                   <Link to="/login" onClick={closeDrawer} className="hover:text-pink-600">
                     Login
@@ -133,6 +171,21 @@ export default function Header() {
                   <Link to="/register" onClick={closeDrawer} className="hover:text-pink-600">
                     Register
                   </Link>
+                </>
+              ) : (
+                <>
+                  <div className="text-gray-800">
+                    {user.firstName} {user.lastName}
+                  </div>
+                  <button
+                    onClick={() => {
+                      logout();
+                      closeDrawer();
+                    }}
+                    className="text-left hover:text-pink-600"
+                  >
+                    Logout
+                  </button>
                 </>
               )}
             </nav>

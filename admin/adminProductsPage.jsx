@@ -90,12 +90,13 @@ export default function AdminProductsPage() {
       </div>
 
       <Link
-        to="/admin/add-product"
-        className="fixed bottom-6 right-6 bg-pink-600 hover:bg-pink-700 text-white text-3xl px-5 py-3 rounded-full shadow-lg transition duration-300 z-50"
-        title="Add Product"
+      to="/admin/add-product"
+      className="fixed bottom-6 right-6 bg-pink-600 hover:bg-pink-700 text-white text-3xl px-5 py-3 rounded-full shadow-lg transition duration-300 z-50"
+      title="Add Product"
       >
-        +
+          +
       </Link>
+
     </div>
   );
 }
