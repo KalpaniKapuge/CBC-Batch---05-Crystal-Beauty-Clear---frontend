@@ -1,67 +1,93 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { BsCart } from "react-icons/bs";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function Header() {
   const [sideDrawerOpened, setSideDrawerOpened] = useState(false);
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      // placeholder: decode or fetch user if needed; minimal display
+      setUser({});
+    }
+  }, []);
 
   const closeDrawer = () => setSideDrawerOpened(false);
   const goHome = () => navigate("/");
 
   return (
-    <header className="w-full h-[80px] shadow-2xl flex justify-center relative bg-white">
+    <header className="w-full h-20 shadow-md bg-white flex items-center justify-between px-6 md:px-12 sticky top-0 z-50">
       <button
         aria-label="Open menu"
-        className="md:hidden absolute left-2 flex items-center"
+        className="md:hidden flex items-center text-pink-600"
         onClick={() => setSideDrawerOpened(true)}
       >
-        <GiHamburgerMenu className="text-3xl" />
+        <GiHamburgerMenu size={28} />
       </button>
 
-      <img
-        onClick={goHome}
-        src="/logo.png"
-        alt="Logo"
-        className="w-[80px] h-[80px] object-cover cursor-pointer"
-      />
+      <div className="flex items-center gap-4 cursor-pointer" onClick={goHome}>
+        <img src="/logo.png" alt="Logo" className="w-20 h-20 object-contain" />
+      </div>
 
-      <div className="hidden md:flex h-full w-[calc(100%-160px)] items-center justify-between px-4">
-        <Link to="/" className="text-[20px] font-bold mx-2">
+      <nav className="hidden md:flex items-center space-x-6 font-semibold text-gray-700">
+        <Link to="/" className="hover:text-pink-600 transition-colors duration-200">
           Home
         </Link>
-        <Link to="/products" className="text-[20px] font-bold mx-2">
+        <Link to="/products" className="hover:text-pink-600 transition-colors duration-200">
           Products
         </Link>
-        <Link to="/about" className="text-[20px] font-bold mx-2">
+        <Link to="/about" className="hover:text-pink-600 transition-colors duration-200">
           About
         </Link>
-        <Link to="/contact" className="text-[20px] font-bold mx-2">
+        <Link to="/contact" className="hover:text-pink-600 transition-colors duration-200">
           Contact
         </Link>
-        <Link to="/search" className="text-[20px] font-bold mx-2">
+        <Link to="/search" className="hover:text-pink-600 transition-colors duration-200">
           Search
         </Link>
-      </div>
-
-      <div className="hidden md:flex w-[80px] bg-pink-600 justify-center items-center">
-        <Link to="/cart" className="text-[20px] font-bold mx-2 text-white">
+        <Link to="/cart" className="relative flex items-center justify-center w-12 h-12 bg-pink-600 rounded-full text-white hover:bg-pink-700 transition-colors duration-200" aria-label="Go to cart">
           <BsCart size={24} />
         </Link>
-      </div>
+        {!user && (
+          <>
+            <Link
+              to="/login"
+              className="px-4 py-2 border border-pink-500 rounded hover:bg-pink-50 text-pink-600"
+            >
+              Login
+            </Link>
+            <Link
+              to="/register"
+              className="px-4 py-2 bg-pink-600 text-white rounded hover:bg-pink-700"
+            >
+              Register
+            </Link>
+          </>
+        )}
+      </nav>
+
+      <Link
+        to="/cart"
+        className="md:hidden flex items-center justify-center w-12 h-12 bg-pink-600 rounded-full text-white hover:bg-pink-700 transition-colors duration-200"
+        aria-label="Go to cart"
+      >
+        <BsCart size={24} />
+      </Link>
 
       {sideDrawerOpened && (
-        <div className="fixed inset-0 bg-[#00000060] flex md:hidden z-50">
-          <div className="w-[350px] bg-white h-full flex flex-col">
-            <div className="w-full h-[80px] shadow-2xl flex justify-center items-center relative">
-              <button
-                aria-label="Close menu"
-                className="absolute left-2"
-                onClick={closeDrawer}
-              >
-                <GiHamburgerMenu className="text-3xl rotate-90" />
-              </button>
+        <div className="fixed inset-0 z-50 flex md:hidden">
+          <div
+            className="flex-1 bg-black bg-opacity-50"
+            onClick={closeDrawer}
+            aria-label="Close menu backdrop"
+            role="button"
+          />
+          <div className="w-72 bg-white shadow-lg flex flex-col">
+            <div className="h-20 flex items-center justify-between px-4 border-b">
               <img
                 src="/logo.png"
                 alt="Logo"
@@ -69,55 +95,48 @@ export default function Header() {
                   closeDrawer();
                   navigate("/");
                 }}
-                className="w-[80px] h-[80px] object-cover cursor-pointer"
+                className="w-16 h-16 object-contain cursor-pointer"
               />
-            </div>
-            <div className="flex-1 w-full flex flex-col items-center gap-2 py-6">
-              <Link
-                to="/"
+              <button
+                aria-label="Close menu"
                 onClick={closeDrawer}
-                className="text-[20px] font-bold my-4"
+                className="text-pink-600 hover:text-pink-800 transition-colors duration-200"
               >
+                <GiHamburgerMenu size={28} className="rotate-90" />
+              </button>
+            </div>
+            <nav className="flex flex-col px-6 py-8 space-y-4 text-lg font-semibold text-gray-700">
+              <Link to="/" onClick={closeDrawer} className="hover:text-pink-600">
                 Home
               </Link>
-              <Link
-                to="/products"
-                onClick={closeDrawer}
-                className="text-[20px] font-bold my-4"
-              >
+              <Link to="/products" onClick={closeDrawer} className="hover:text-pink-600">
                 Products
               </Link>
-              <Link
-                to="/about"
-                onClick={closeDrawer}
-                className="text-[20px] font-bold my-4"
-              >
+              <Link to="/about" onClick={closeDrawer} className="hover:text-pink-600">
                 About
               </Link>
-              <Link
-                to="/contact"
-                onClick={closeDrawer}
-                className="text-[20px] font-bold my-4"
-              >
+              <Link to="/contact" onClick={closeDrawer} className="hover:text-pink-600">
                 Contact
               </Link>
-              <Link
-                to="/cart"
-                onClick={closeDrawer}
-                className="text-[20px] font-bold my-4 flex items-center"
-              >
-                <BsCart size={24} />
-                <span className="ml-2">Cart</span>
+              <Link to="/search" onClick={closeDrawer} className="hover:text-pink-600">
+                Search
               </Link>
-            </div>
+              <Link to="/cart" onClick={closeDrawer} className="flex items-center space-x-3 hover:text-pink-600">
+                <BsCart size={24} />
+                <span>Cart</span>
+              </Link>
+              {!user && (
+                <>
+                  <Link to="/login" onClick={closeDrawer} className="hover:text-pink-600">
+                    Login
+                  </Link>
+                  <Link to="/register" onClick={closeDrawer} className="hover:text-pink-600">
+                    Register
+                  </Link>
+                </>
+              )}
+            </nav>
           </div>
-          {/* clicking outside closes */}
-          <div
-            className="flex-1"
-            onClick={closeDrawer}
-            aria-label="Backdrop"
-            role="button"
-          />
         </div>
       )}
     </header>

@@ -28,47 +28,22 @@ export default function CheckoutPage() {
     }
 
     const orderInformation = {
-      products: cart.map((item) => ({
-        productId: item.productId, 
-        qty: item.qty,
-      })),
+      products: cart.map((item) => ({ productId: item.productId, qty: item.qty })),
       phone: phoneNumber,
       address: address,
     };
 
     try {
       const res = await axios.post(
-        import.meta.env.VITE_BACKEND_URL + "/api/orders",
+        `${import.meta.env.VITE_BACKEND_URL}/api/orders`,
         orderInformation,
-        {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        }
+        { headers: { Authorization: "Bearer " + localStorage.getItem("token") } }
       );
       toast.success("Order placed successfully");
-      console.log(res.data);
-      setCart([]); 
+      setCart([]);
     } catch (err) {
-      console.log(err);
+      console.error(err);
       toast.error("Error placing order");
-    }
-  }
-
-  function removeFromCart(productID) {
-    const newCart = cart.filter((item) => item.productID !== productID);
-    setCart(newCart);
-  }
-
-  function changeQty(index, qty) {
-    const newQty = cart[index].qty + qty;
-    if (newQty <= 0) {
-      removeFromCart(cart[index].productID);
-      return;
-    } else {
-      const newCart = [...cart];
-      newCart[index].qty = newQty;
-      setCart(newCart);
     }
   }
 
@@ -76,14 +51,26 @@ export default function CheckoutPage() {
     return cart.reduce((sum, item) => sum + item.price * item.qty, 0);
   };
 
+  function removeFromCart(productId) {
+    setCart((prev) => prev.filter((i) => i.productId !== productId));
+  }
+
+  function changeQty(index, qty) {
+    setCart((prev) => {
+      const clone = [...prev];
+      const newQty = clone[index].qty + qty;
+      if (newQty <= 0) return prev;
+      clone[index].qty = newQty;
+      return clone;
+    });
+  }
+
   return (
     <div className="w-full h-full flex flex-col items-center pt-4 relative">
       <div className="w-[400px] min-h-[200px] shadow-2xl absolute top-1 right-1 flex flex-col justify-center items-center bg-white rounded-xl p-4 gap-2">
         <p className="text-2xl text-secondary font-bold">
           Total:
-          <span className="text-accent font-bold mx-2">
-            Rs.{getTotal().toFixed(2)}
-          </span>
+          <span className="text-accent font-bold mx-2">Rs.{getTotal().toFixed(2)}</span>
         </p>
 
         <input
@@ -107,13 +94,6 @@ export default function CheckoutPage() {
         >
           Place Order
         </button>
-
-        <Link
-          to="/checkout"
-          className="text-white bg-accent w-full text-center py-2 rounded-lg font-bold hover:bg-secondary transition-all duration-300"
-        >
-          Proceed to Checkout
-        </Link>
       </div>
 
       {cart.length === 0 ? (
@@ -121,62 +101,38 @@ export default function CheckoutPage() {
       ) : (
         cart.map((item, index) => (
           <div
-            key={item.productID}
-            className="w-[600px] h-[100px] rounded-tl-3xl rounded-bl-3xl my-4 bg-primary shadow-2xl flex flex-row relative justify-center items-center"
+            key={item.productId}
+            className="w-[600px] h-[100px] rounded-tl-3xl rounded-bl-3xl my-4 bg-white shadow-2xl flex flex-row relative justify-center items-center"
           >
-            <img
-              src={item.image}
-              alt={item.name}
-              className="w-[100px] h-[100px] object-cover pl-4"
-            />
-
+            <img src={item.image} alt={item.name} className="w-[100px] h-[100px] object-cover pl-4" />
             <div className="w-[250px] h-full flex flex-col justify-center items-start pl-4">
               <h1 className="text-2xl text-secondary font-semibold">{item.name}</h1>
-              <h2 className="text-md text-gray-600 font-semibold">{item.productID}</h2>
+              <h2 className="text-md text-gray-600 font-semibold">{item.productId}</h2>
               {item.labelledPrice > item.price ? (
                 <div>
-                  <span className="text-md mx-1 text-gray-500 line-through">
-                    Rs.{item.labelledPrice.toFixed(2)}
-                  </span>
-                  <span className="text-md mx-1 font-bold text-accent">
-                    Rs.{item.price.toFixed(2)}
-                  </span>
+                  <span className="text-md mx-1 text-gray-500 line-through">Rs.{item.labelledPrice.toFixed(2)}</span>
+                  <span className="text-md mx-1 font-bold text-accent">Rs.{item.price.toFixed(2)}</span>
                 </div>
               ) : (
-                <span className="text-md mx-1 font-bold text-accent">
-                  Rs.{item.price.toFixed(2)}
-                </span>
+                <span className="text-md mx-1 font-bold text-accent">Rs.{item.price.toFixed(2)}</span>
               )}
             </div>
 
-            {/* Quantity Controls */}
             <div className="h-full w-[100px] flex flex-col justify-center items-center gap-1">
-              <button
-                className="bg-accent text-white p-1 rounded hover:bg-secondary"
-                onClick={() => changeQty(index, -1)}
-              >
+              <button className="bg-accent text-white p-1 rounded hover:bg-secondary" onClick={() => changeQty(index, -1)}>
                 <BiMinus />
               </button>
               <span className="text-lg font-bold">{item.qty}</span>
-              <button
-                className="bg-accent text-white p-1 rounded hover:bg-secondary"
-                onClick={() => changeQty(index, 1)}
-              >
+              <button className="bg-accent text-white p-1 rounded hover:bg-secondary" onClick={() => changeQty(index, 1)}>
                 <BiPlus />
               </button>
             </div>
 
             <div className="h-full w-[200px] flex flex-col justify-center items-end pr-4">
-              <h1 className="text-xl text-secondary font-semibold">
-                Rs.{(item.price * item.qty).toFixed(2)}
-              </h1>
+              <h1 className="text-xl text-secondary font-semibold">Rs.{(item.price * item.qty).toFixed(2)}</h1>
             </div>
 
-            {/* Delete */}
-            <button
-              className="absolute right-[-30px] text-red-600 hover:text-white hover:bg-red-600 p-2 rounded-full"
-              onClick={() => removeFromCart(item.productID)}
-            >
+            <button className="absolute right-[-30px] text-red-600 hover:text-white hover:bg-red-600 p-2 rounded-full" onClick={() => removeFromCart(item.productId)}>
               <BiTrash />
             </button>
           </div>

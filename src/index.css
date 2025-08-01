@@ -1,8 +1,13 @@
 @import "tailwindcss";
 
-@theme{
-    --color-primary:#FBFBFB;
-    --color-secondary:#393E46
-    --color-accent:#C5BAFF
-    --font-main:Plywrite HU,sans-serif
+:root {
+  --color-primary: #fbfbfb;
+  --color-secondary: #393e46;
+  --color-accent: #c5baff;
+  --font-main: "Plywrite HU", sans-serif;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: #f5f7fa;
 }

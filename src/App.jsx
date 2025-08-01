@@ -1,34 +1,54 @@
-import Header from './components/header.jsx';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import HomePage from '../pages/home.jsx';
-import LoginPage from '../pages/login.jsx';
-import RegisterPage from '../pages/register.jsx';
-import TestingPage from '../pages/testingPage.jsx';
-import { Toaster } from 'react-hot-toast';
-import AddProductPage from '../admin/addProductPage.jsx';
-import AdminProductsPage from '../admin/adminProductsPage.jsx';
+import { Routes, Route } from "react-router-dom";
+import MainLayout from "./components/mainLayout.jsx";
+import HomePage from "../pages/home.jsx";
+import AdminProductsPage from "../admin/adminProductsPage.jsx";
+import AdminOrdersPage from "../admin/adminOrdersPage.jsx";
+import AddProductPage from "../admin/addProductPage.jsx";
+import EditProductPage from "../admin/editProductPage.jsx";
+import CartPage from "../pages/client/cart.jsx";
+import CheckoutPage from "../pages/client/checkout.jsx";
+import SearchProductPage from "../pages/client/searchProductsPage.jsx";
 
-function App() {
+function AboutPage() {
   return (
-    <GoogleOAuthProvider clientId="1044000332395-in4om9f6ignl14euilehl25qr3m4f91d.apps.googleusercontent.com">
-    <BrowserRouter>
-      <div>
-        <Header />
-        <Toaster position='top-right'/>
-        <Routes>
-          <Route path="/*" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/testing" element={<TestingPage />} />
-          <Route path="/admin/add-product" element={<AddProductPage />} />
-          <Route path="/admin/products" element={<AdminProductsPage />} />
-          <Route path="/forget" element={<ForgetPasswordPage/>}/>
-
-        </Routes>
-      </div>
-    </BrowserRouter>
-    </GoogleOAuthProvider>
+    <div className="flex items-center justify-center">
+      <h1 className="text-center text-3xl font-bold text-pink-600">About Us</h1>
+    </div>
   );
 }
 
-export default App;
+function ContactPage() {
+  return (
+    <div className="flex items-center justify-center">
+      <h1 className="text-center text-3xl font-bold text-pink-600">Contact Us</h1>
+    </div>
+  );
+}
+
+function NotFoundPage() {
+  return (
+    <div className="flex items-center justify-center">
+      <h1 className="text-center text-3xl font-bold text-red-600">404 Not Found</h1>
+    </div>
+  );
+}
+
+export default function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<MainLayout />}> {/* layout wrapper */}
+        <Route index element={<HomePage />} />
+        <Route path="products" element={<AdminProductsPage />} />
+        <Route path="orders" element={<AdminOrdersPage />} />
+        <Route path="add-product" element={<AddProductPage />} />
+        <Route path="edit-product" element={<EditProductPage />} />
+        <Route path="cart" element={<CartPage />} />
+        <Route path="checkout" element={<CheckoutPage />} />
+        <Route path="search" element={<SearchProductPage />} />
+        <Route path="about" element={<AboutPage />} />
+        <Route path="contact" element={<ContactPage />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Route>
+    </Routes>
+  );
+}

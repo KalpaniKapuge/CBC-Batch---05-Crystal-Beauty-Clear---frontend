@@ -20,10 +20,7 @@ export default function LoginPage() {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/users/login`,
-        {
-          email,
-          password,
-        }
+        { email, password }
       );
       toast.success("Login successful");
       localStorage.setItem("token", response.data.token);
@@ -40,37 +37,35 @@ export default function LoginPage() {
     }
   }
 
-  const handleGoogleLogin = () => {
-    // placeholder: integrate OAuth redirect
-    toast("Google login clicked");
-  };
-
-  const gooleLogin = useGoogleLogin({
-    onSuccess:(response) => {
-      const accessToken = response.access_token
-      axios.post(import.meta.env.VITE_BACKEND_URL+"/api/users/login/google",
-        {
-          accessToken:accessToken
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (response) => {
+      try {
+        const accessToken = response.access_token;
+        const res = await axios.post(
+          `${import.meta.env.VITE_BACKEND_URL}/api/users/login/google`,
+          { accessToken }
+        );
+        toast.success("Login Successful");
+        const token = res.data.token;
+        localStorage.setItem("token", token);
+        if (res.data.role === "admin") {
+          navigate("/admin/");
+        } else {
+          navigate("/");
         }
-      ).then((response) => {
-        toast.success("Login Successfull")
-        const token = response.data.token
-        localStorage.setItem("token",token)
-        if(response.data.role==="admin"){
-          navigate("/admin/")
-        }else{
-          navigate("/")
-        }
-      })
-    }
-  })
+      } catch (err) {
+        toast.error("Google login failed");
+      }
+    },
+    onError: () => {
+      toast.error("Google login was cancelled or failed");
+    },
+  });
 
   return (
     <div className="w-full h-screen flex items-center justify-center bg-pink-50">
       <div className="bg-white p-8 rounded-3xl shadow-2xl w-full max-w-sm">
-        <h2 className="text-3xl font-bold mb-6 text-pink-600 text-center">
-          Login
-        </h2>
+        <h2 className="text-3xl font-bold mb-6 text-pink-600 text-center">Login</h2>
 
         <div className="space-y-4">
           <input
@@ -107,14 +102,12 @@ export default function LoginPage() {
 
           <div className="relative flex items-center my-4">
             <div className="flex-grow h-px bg-pink-200" />
-            <span className="mx-3 text-sm text-pink-500 font-medium">
-              OR
-            </span>
+            <span className="mx-3 text-sm text-pink-500 font-medium">OR</span>
             <div className="flex-grow h-px bg-pink-200" />
           </div>
 
           <button
-            onClick={handleGoogleLogin}
+            onClick={() => googleLogin()}
             type="button"
             className="w-full flex items-center justify-center gap-2 border border-pink-400 text-pink-700 py-2 rounded-lg hover:bg-pink-50 transition"
           >
@@ -126,4 +119,3 @@ export default function LoginPage() {
     </div>
   );
 }
-//nkmb czcn xyys zpzb

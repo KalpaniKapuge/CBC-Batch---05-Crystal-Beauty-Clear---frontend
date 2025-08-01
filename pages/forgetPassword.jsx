@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-export default function ForgotPassword() {
+export default function ForgotPasswordPage() {
   const [otpSent, setOtpSent] = useState(false);
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");

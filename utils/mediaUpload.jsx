@@ -1,41 +1,21 @@
 import { createClient } from "@supabase/supabase-js";
 
-const url = "https://ofviqmvabgpkantxleui.supabase.co";
-const key =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9mdmlxbXZhYmdwa2FudHhsZXVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4MTE1NDgsImV4cCI6MjA2OTM4NzU0OH0.P-I_Mxr6k9JgmFHioJQ827swKfRi-aNQFSnxgvpUjW4";
+// Move the URL and KEY into environment variables for security.
+const url = import.meta.env.VITE_SUPABASE_URL;
+const key = import.meta.env.VITE_SUPABASE_ANON_KEY; // public anon key; do not expose service role in frontend
 
 const supabase = createClient(url, key);
 
-export default function mediaUpload(file) {
-  return new Promise(async (resolve, reject) => {
-    if (file == null) {
-      reject("No file selected");
-      return;
-    }
-
-    const timestamp = new Date().getTime();
-    const newName = timestamp + "_" + file.name;
-
-    try {
-      const { error: uploadError } = await supabase.storage
-        .from("images")
-        .upload(newName, file, {
-          upsert: false,
-          cacheControl: "3600",
-        });
-
-      if (uploadError) {
-        reject("Error uploading file");
-        return;
-      }
-
-     const { data } = supabase.storage.from("images").getPublicUrl(newName);
-    resolve(data.publicUrl); // ✅ This returns the plain URL string
-
-
-
-    } catch (err) {
-      reject("Unexpected error: " + err.message);
-    }
-  });
+export default async function mediaUpload(file) {
+  if (!file) throw new Error("No file selected");
+  const timestamp = new Date().getTime();
+  const newName = `${timestamp}_${file.name}`;
+  const { error: uploadError } = await supabase.storage
+    .from("images")
+    .upload(newName, file, { upsert: false, cacheControl: "3600" });
+  if (uploadError) {
+    throw new Error("Error uploading file: " + uploadError.message);
+  }
+  const { data } = supabase.storage.from("images").getPublicUrl(newName);
+  return data.publicUrl;
 }

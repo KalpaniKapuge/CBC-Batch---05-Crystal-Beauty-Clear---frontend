@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 import axios from "axios";
-import Modal from "react-modal";
+import Modal from "react-modal"
 import toast from "react-hot-toast";
 
 // Accessibility: attach to root
