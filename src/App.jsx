@@ -1,49 +1,68 @@
 import { Routes, Route } from "react-router-dom";
-import MainLayout from "./components/mainLayout.jsx";
+import Header from "./components/header.jsx";
 import HomePage from "../pages/home.jsx";
-import AdminProductsPage from "../admin/adminProductsPage.jsx";
-import AdminOrdersPage from "../admin/adminOrdersPage.jsx";
-import AddProductPage from "../admin/addProductPage.jsx";
-import EditProductPage from "../admin/editProductPage.jsx";
-import CartPage from "../pages/client/cart.jsx";
-import CheckoutPage from "../pages/client/checkout.jsx";
-import SearchProductPage from "../pages/client/searchProductsPage.jsx";
-import LoginPage from "../pages/login.jsx";
-import RegisterPage from "../pages/register.jsx";
-import ForgotPasswordPage from "../pages/forgetPassword.jsx";
+import toast, { Toaster } from "react-hot-toast";
 
-function NotFoundPage() {
+// Placeholder pages
+function About() {
   return (
-    <div className="flex items-center justify-center h-full">
-      <h1 className="text-center text-4xl font-bold text-red-600">404 Not Found</h1>
+    <div className="min-h-screen flex items-center justify-center p-6">
+      <div className="max-w-xl text-center">
+        <h1 className="text-4xl font-bold text-pink-600 mb-4">About Us</h1>
+        <p className="text-gray-700">
+          Crystal Bloom is dedicated to bringing you the finest makeup and beauty products with a touch of elegance.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function Login() {
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="p-8 bg-white rounded-xl shadow-lg">
+        <h2 className="text-2xl font-bold text-pink-600 mb-4">Login</h2>
+        {/* login form stub */}
+      </div>
+    </div>
+  );
+}
+
+function Register() {
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="p-8 bg-white rounded-xl shadow-lg">
+        <h2 className="text-2xl font-bold text-pink-600 mb-4">Register</h2>
+        {/* register form stub */}
+      </div>
+    </div>
+  );
+}
+
+function Cart() {
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="text-center">
+        <h1 className="text-3xl font-bold text-pink-600">Your Cart</h1>
+        <p className="text-gray-600">No items yet.</p>
+      </div>
     </div>
   );
 }
 
 export default function App() {
   return (
-    <Routes>
-      <Route path="/" element={<MainLayout />}>
-        <Route index element={<HomePage />} />
-
-        {/* Client */}
-        <Route path="cart" element={<CartPage />} />
-        <Route path="checkout" element={<CheckoutPage />} />
-        <Route path="search" element={<SearchProductPage />} />
-
-        {/* Auth */}
-        <Route path="login" element={<LoginPage />} />
-        <Route path="register" element={<RegisterPage />} />
-        <Route path="forgot-password" element={<ForgotPasswordPage />} />
-
-        {/* Admin */}
-        <Route path="admin/products" element={<AdminProductsPage />} />
-        <Route path="admin/orders" element={<AdminOrdersPage />} />
-        <Route path="admin/add-product" element={<AddProductPage />} />
-        <Route path="admin/edit-product" element={<EditProductPage />} />
-
-        <Route path="*" element={<NotFoundPage />} />
-      </Route>
-    </Routes>
+    <>
+      <Header />
+      <Toaster position="top-right" />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/cart" element={<Cart />} />
+        {/* extend with other routes as needed */}
+      </Routes>
+    </>
   );
 }

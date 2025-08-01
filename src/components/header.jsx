@@ -56,125 +56,182 @@ export default function Header() {
   const goHome = () => navigate("/");
 
   return (
-    <header className="w-full h-20 shadow-md bg-white flex items-center justify-between px-6 md:px-12 sticky top-0 z-50">
+    <header className="w-full h-20 sticky top-0 z-50 flex items-center px-6 md:px-12 bg-gradient-to-r from-pink-50 to-pink-100 shadow-xl">
+      {/* Mobile menu button */}
       <button
         aria-label="Open menu"
-        className="md:hidden flex items-center text-pink-600"
+        className="md:hidden flex items-center text-pink-600 p-2 rounded-full hover:bg-pink-50 transition"
         onClick={() => setSideDrawerOpened(true)}
       >
-        <GiHamburgerMenu size={28} />
+        <GiHamburgerMenu size={24} />
       </button>
 
-      <div className="flex items-center gap-4 cursor-pointer" onClick={goHome}>
-        <img src="/logo.png" alt="Logo" className="w-20 h-20 object-contain" />
+      {/* Logo */}
+      <div
+        className="flex items-center gap-2 cursor-pointer flex-shrink-0"
+        onClick={goHome}
+      >
+        <img src="/logo.png" alt="Logo" className="w-16 h-16 object-contain" />
+        <span className="hidden sm:inline font-extrabold text-2xl text-pink-700 tracking-tight">
+          Crystal Bloom
+        </span>
       </div>
 
-      <nav className="hidden md:flex items-center space-x-6 font-semibold text-gray-700">
-        <Link to="/" className="hover:text-pink-600 transition-colors duration-200">
+      {/* Desktop nav */}
+      <nav className="hidden md:flex flex-1 justify-center gap-10 font-medium text-gray-700">
+        <Link
+          to="/"
+          className="relative px-3 py-2 rounded-full hover:text-white hover:bg-pink-600 transition-all duration-200"
+        >
           Home
         </Link>
-        <Link to="/search" className="hover:text-pink-600 transition-colors duration-200">
+        <Link
+          to="/search"
+          className="relative px-3 py-2 rounded-full hover:text-white hover:bg-pink-600 transition-all duration-200"
+        >
           Search
         </Link>
-        <Link
-          to="/cart"
-          className="relative flex items-center justify-center w-12 h-12 bg-pink-600 rounded-full text-white hover:bg-pink-700 transition-colors duration-200"
-          aria-label="Go to cart"
-        >
-          <BsCart size={24} />
-        </Link>
+      </nav>
 
+      {/* Right-side actions */}
+      <div className="flex items-center gap-4 ml-auto">
+        {/* Auth / User */}
         {!user ? (
-          <>
+          <div className="hidden md:flex items-center gap-3">
             <Link
               to="/login"
-              className="px-4 py-2 border border-pink-500 rounded hover:bg-pink-50 text-pink-600"
+              className="px-4 py-2 border border-pink-500 rounded-full hover:bg-pink-50 text-pink-600 font-semibold transition focus:outline-none focus:ring-2 focus:ring-pink-300"
             >
               Login
             </Link>
             <Link
               to="/register"
-              className="px-4 py-2 bg-pink-600 text-white rounded hover:bg-pink-700"
+              className="px-4 py-2 bg-pink-600 text-white rounded-full hover:brightness-105 font-semibold transition focus:outline-none focus:ring-2 focus:ring-pink-300"
             >
               Register
             </Link>
-          </>
+          </div>
         ) : (
-          <div className="flex items-center gap-4">
-            <div className="text-sm">
-              {user.firstName} {user.lastName}
+          <div className="hidden md:flex items-center gap-4 bg-white/60 backdrop-blur-sm px-4 py-2 rounded-full shadow-sm">
+            <div className="text-sm text-pink-800 flex items-center gap-2">
+              <div>
+                {user.firstName} {user.lastName}
+              </div>
               {user.role === "admin" && (
-                <span className="ml-1 text-xs bg-yellow-100 px-2 rounded">Admin</span>
+                <span className="ml-1 text-xs bg-yellow-100 px-2 rounded-full">
+                  Admin
+                </span>
               )}
             </div>
             <button
               onClick={logout}
-              className="px-3 py-1 bg-gray-100 rounded hover:bg-gray-200 text-sm"
+              className="px-3 py-1 bg-pink-50 text-pink-600 rounded-full hover:bg-pink-100 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-pink-300"
             >
               Logout
             </button>
           </div>
         )}
-      </nav>
 
-      <Link
-        to="/cart"
-        className="md:hidden flex items-center justify-center w-12 h-12 bg-pink-600 rounded-full text-white hover:bg-pink-700 transition-colors duration-200"
-        aria-label="Go to cart"
-      >
-        <BsCart size={24} />
-      </Link>
+        {/* Desktop Cart (after auth) */}
+        <div className="hidden md:flex items-center relative">
+          <Link
+            to="/cart"
+            aria-label="Go to cart"
+            className="flex items-center justify-center w-14 h-14 bg-gradient-to-br from-pink-500 to-pink-600 rounded-full text-white shadow-lg hover:scale-105 transform transition"
+          >
+            <BsCart size={24} />
+          </Link>
+        </div>
 
+        {/* Mobile cart icon */}
+        <Link
+          to="/cart"
+          className="md:hidden flex items-center justify-center w-12 h-12 bg-pink-600 rounded-full text-white hover:bg-pink-700 transition-colors duration-200"
+          aria-label="Go to cart"
+        >
+          <BsCart size={24} />
+        </Link>
+      </div>
+
+      {/* Side drawer for mobile */}
       {sideDrawerOpened && (
         <div className="fixed inset-0 z-50 flex md:hidden">
+          {/* backdrop */}
           <div
-            className="flex-1 bg-black bg-opacity-50"
+            className="flex-1 bg-black bg-opacity-40 backdrop-blur-sm"
             onClick={closeDrawer}
             aria-label="Close menu backdrop"
             role="button"
           />
-          <div className="w-72 bg-white shadow-lg flex flex-col">
+          <div className="w-72 bg-white shadow-2xl flex flex-col overflow-hidden">
             <div className="h-20 flex items-center justify-between px-4 border-b">
-              <img
-                src="/logo.png"
-                alt="Logo"
+              <div
+                className="flex items-center gap-2 cursor-pointer"
                 onClick={() => {
                   closeDrawer();
                   navigate("/");
                 }}
-                className="w-16 h-16 object-contain cursor-pointer"
-              />
+              >
+                <img
+                  src="/logo.png"
+                  alt="Logo"
+                  className="w-14 h-14 object-contain"
+                />
+                <span className="font-bold text-lg text-pink-700">
+                  GlamCart
+                </span>
+              </div>
               <button
                 aria-label="Close menu"
                 onClick={closeDrawer}
-                className="text-pink-600 hover:text-pink-800 transition-colors duration-200"
+                className="text-pink-600 hover:text-pink-800 transition-colors duration-200 p-2 rounded-full"
               >
-                <GiHamburgerMenu size={28} className="rotate-90" />
+                <GiHamburgerMenu size={24} className="rotate-90" />
               </button>
             </div>
-            <nav className="flex flex-col px-6 py-8 space-y-4 text-lg font-semibold text-gray-700">
-              <Link to="/" onClick={closeDrawer} className="hover:text-pink-600">
+            <nav className="flex flex-col px-6 py-8 space-y-4 text-base font-semibold text-gray-700">
+              <Link
+                to="/"
+                onClick={closeDrawer}
+                className="hover:text-pink-600 rounded-md px-2 py-1 transition"
+              >
                 Home
               </Link>
-              <Link to="/search" onClick={closeDrawer} className="hover:text-pink-600">
+              <Link
+                to="/search"
+                onClick={closeDrawer}
+                className="hover:text-pink-600 rounded-md px-2 py-1 transition"
+              >
                 Search
               </Link>
-              <Link to="/cart" onClick={closeDrawer} className="flex items-center space-x-3 hover:text-pink-600">
-                <BsCart size={24} />
+              <Link
+                to="/cart"
+                onClick={closeDrawer}
+                className="flex items-center space-x-3 hover:text-pink-600 rounded-md px-2 py-1 transition"
+              >
+                <BsCart size={22} />
                 <span>Cart</span>
               </Link>
               {!user ? (
                 <>
-                  <Link to="/login" onClick={closeDrawer} className="hover:text-pink-600">
+                  <Link
+                    to="/login"
+                    onClick={closeDrawer}
+                    className="hover:text-pink-600 rounded-md px-2 py-1 transition"
+                  >
                     Login
                   </Link>
-                  <Link to="/register" onClick={closeDrawer} className="hover:text-pink-600">
+                  <Link
+                    to="/register"
+                    onClick={closeDrawer}
+                    className="hover:text-pink-600 rounded-md px-2 py-1 transition"
+                  >
                     Register
                   </Link>
                 </>
               ) : (
                 <>
-                  <div className="text-gray-800">
+                  <div className="text-pink-800 font-medium">
                     {user.firstName} {user.lastName}
                   </div>
                   <button
@@ -182,7 +239,7 @@ export default function Header() {
                       logout();
                       closeDrawer();
                     }}
-                    className="text-left hover:text-pink-600"
+                    className="text-left hover:text-pink-600 rounded-md px-2 py-1 transition"
                   >
                     Logout
                   </button>
