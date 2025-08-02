@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import Header from "./components/header.jsx";
 import HomePage from "../pages/home.jsx";
 import toast, { Toaster } from "react-hot-toast";
+import SearchProductPage from "../pages/client/searchProductsPage.jsx";
 
 
 // Placeholder pages
@@ -53,6 +54,7 @@ export default function App() {
       <Toaster position="top-right" />
       <Routes>
         <Route path="/" element={<HomePage />} />
+         <Route path="/search-products" element={<SearchProductPage />} />
         <Route path="/about" element={<About />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />

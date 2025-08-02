@@ -1,7 +1,12 @@
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
-import ProductCard from "../../src/components/productCard.jsx"
+import { useLocation, Link } from "react-router-dom";
+import ProductCard from "../../src/components/productCard.jsx";
 import toast from "react-hot-toast";
+
+function useQueryParam() {
+  return new URLSearchParams(useLocation().search);
+}
 
 function Loading() {
   return (
@@ -12,9 +17,12 @@ function Loading() {
 }
 
 export default function SearchProductPage() {
+  const queryParam = useQueryParam();
+  const q = queryParam.get("query") || "";
+
   const [products, setProducts] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [query, setQuery] = useState("");
+  const [isLoading, setIsLoading] = useState(Boolean(q));
+  const [query, setQuery] = useState(q);
   const debounceRef = useRef(null);
   const cancelTokenRef = useRef(null);
   const isMountedRef = useRef(true);
@@ -28,24 +36,7 @@ export default function SearchProductPage() {
     };
   }, []);
 
-  useEffect(() => {
-    const fetchAll = async () => {
-      if (!isMountedRef.current) return;
-      setIsLoading(true);
-      try {
-        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products`);
-        if (isMountedRef.current) setProducts(res.data || []);
-      } catch (error) {
-        if (isMountedRef.current)
-          toast.error(error.response?.data?.message || "Error fetching products");
-      } finally {
-        if (isMountedRef.current) setIsLoading(false);
-      }
-    };
-    fetchAll();
-  }, []);
-
-  const performSearch = async (q) => {
+  const performSearch = async (term) => {
     if (cancelTokenRef.current) {
       try {
         cancelTokenRef.current.cancel("New request initiated");
@@ -56,7 +47,7 @@ export default function SearchProductPage() {
     setIsLoading(true);
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/api/products/search/${encodeURIComponent(q)}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/products/search/${encodeURIComponent(term)}`,
         { cancelToken: cancelTokenRef.current.token }
       );
       if (isMountedRef.current) setProducts(response.data || []);
@@ -64,56 +55,86 @@ export default function SearchProductPage() {
       if (axios.isCancel(error)) return;
       if (isMountedRef.current)
         toast.error(
-          error.response?.data?.message ? `Search failed: ${error.response.data.message}` : "Error fetching products"
+          error.response?.data?.message
+            ? `Search failed: ${error.response.data.message}`
+            : "Error fetching products"
         );
     } finally {
       if (isMountedRef.current) setIsLoading(false);
     }
   };
 
-  const handleSearchChange = (e) => {
-    const q = e.target.value;
+  // initial search if query exists
+  useEffect(() => {
+    if (q.trim().length > 0) {
+      performSearch(q.trim());
+    } else {
+      setProducts([]);
+      setIsLoading(false);
+    }
     setQuery(q);
+  }, [q]);
+
+  const handleSearchChange = (e) => {
+    const val = e.target.value;
+    setQuery(val);
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
-      if (q.trim().length === 0) {
+      if (val.trim().length === 0) {
         setProducts([]);
         if (isMountedRef.current) setIsLoading(false);
         return;
       }
-      performSearch(q.trim());
+      performSearch(val.trim());
     }, 300);
   };
 
   return (
     <div className="w-full min-h-screen flex flex-col items-center p-6 bg-gray-50">
-      <div className="w-full max-w-3xl mb-6">
-        <input
-          type="text"
-          placeholder="Search for products..."
-          className="w-full px-4 py-3 rounded-xl border border-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-400 shadow-sm text-base"
-          value={query}
-          onChange={handleSearchChange}
-          aria-label="Search products"
-        />
+      <div className="w-full max-w-3xl mb-6 flex flex-col sm:flex-row gap-4">
+        <div className="flex-1">
+          <input
+            type="text"
+            placeholder="Search for products..."
+            className="w-full px-4 py-3 rounded-xl border border-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-400 shadow-sm text-base"
+            value={query}
+            onChange={handleSearchChange}
+            aria-label="Search products"
+          />
+        </div>
+        <div className="flex items-center gap-4">
+          <Link
+            to={`/search-products?query=${encodeURIComponent(query.trim())}`}
+            className="inline-flex items-center px-6 py-3 bg-pink-600 hover:bg-pink-700 text-white font-semibold rounded-full shadow transition"
+          >
+            Search
+          </Link>
+        </div>
       </div>
 
       <div className="w-full max-w-5xl flex flex-col gap-4">
         {query.trim().length === 0 ? (
-          <div className="text-center text-gray-600 text-lg">Please enter a search query</div>
+          <div className="text-center text-gray-600 text-lg">
+            Please enter a search query
+          </div>
         ) : isLoading ? (
           <Loading />
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {products.map((product) => (
-              <ProductCard key={product.productId || product._id} product={product} />
-            ))}
+          <>
             {products.length === 0 && (
-              <div className="col-span-full text-center text-gray-500">
+              <div className="col-span-full text-center text-gray-500 mb-6">
                 No products found for "{query}"
               </div>
             )}
-          </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {products.map((product) => (
+                <ProductCard
+                  key={product.productId || product._id}
+                  product={product}
+                />
+              ))}
+            </div>
+          </>
         )}
       </div>
     </div>

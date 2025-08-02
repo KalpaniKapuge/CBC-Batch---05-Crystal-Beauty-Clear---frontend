@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { BsSearch } from "react-icons/bs";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import toast from "react-hot-toast";
 import ProductCard from "../src/components/productCard.jsx";
-import { useProductSearch } from "../src/hooks/useProductSearch.jsx";
 
 const carouselSlides = [
   {
@@ -32,7 +33,7 @@ const carouselSlides = [
   },
 ];
 
-// Enhanced image preloading with error handling
+// Preload carousel images
 carouselSlides.forEach((s) => {
   const img = new Image();
   img.src = s.image;
@@ -68,7 +69,6 @@ function Carousel() {
     setIndex((i) => (i - 1 + carouselSlides.length) % carouselSlides.length);
   const next = () => setIndex((i) => (i + 1) % carouselSlides.length);
 
-  // Keyboard navigation
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === "ArrowLeft") prev();
@@ -80,7 +80,7 @@ function Carousel() {
 
   return (
     <div
-      className="relative w-full h-80 md:h-[500px] overflow-hidden rounded-3xl shadow-2xl mt-12 bg-gradient-to-br from-pink-50 via-white to-pink-100 group"
+      className="relative w-full h-80 md:h-[500px] overflow-hidden rounded-3xl shadow-2xl mt-10 bg-gradient-to-br from-pink-50 via-white to-pink-100 group"
       role="region"
       aria-label="Promotional carousel"
       onMouseEnter={() => {
@@ -90,7 +90,6 @@ function Carousel() {
         isHoveredRef.current = false;
       }}
     >
-      {/* Animated background pattern */}
       <div className="absolute inset-0 opacity-20">
         <div className="absolute top-10 left-10 w-32 h-32 bg-pink-200 rounded-full blur-xl animate-pulse"></div>
         <div className="absolute bottom-10 right-10 w-40 h-40 bg-white rounded-full blur-xl animate-pulse delay-1000"></div>
@@ -110,19 +109,16 @@ function Carousel() {
           <div
             className="w-full h-full bg-cover bg-center bg-no-repeat flex items-center relative overflow-hidden"
             style={{
-           backgroundImage: `linear-gradient(135deg, rgba(236,72,153,0.1) 0%, rgba(236,72,153,0.1) 50%, rgba(236,72,153,0.1) 100%), url(${slide.image})`,
-
+              backgroundImage: `linear-gradient(135deg, rgba(236,72,153,0.1) 0%, rgba(236,72,153,0.1) 50%, rgba(236,72,153,0.1) 100%), url(${slide.image})`,
             }}
           >
-            {/* Enhanced fallback with animated gradient */}
             <div className="absolute inset-0 bg-gradient-to-r from-pink-300 via-pink-400 to-pink-500 opacity-20 animate-gradient-x"></div>
 
-            {/* Floating particles effect */}
             <div className="absolute inset-0 overflow-hidden">
               {[...Array(6)].map((_, idx) => (
                 <div
                   key={idx}
-                  className={`absolute w-2 h-2 bg-white/40 rounded-full animate-float`}
+                  className="absolute w-2 h-2 bg-white/40 rounded-full animate-float"
                   style={{
                     left: `${20 + idx * 15}%`,
                     top: `${30 + (idx % 3) * 20}%`,
@@ -140,7 +136,9 @@ function Carousel() {
               <h2 className="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-pink-700 to-pink-800 mb-3 leading-tight animate-glow">
                 {slide.title}
               </h2>
-              <p className="text-pink-700 mb-6 text-base md:text-lg font-medium leading-relaxed">{slide.subtitle}</p>
+              <p className="text-pink-700 mb-6 text-base md:text-lg font-medium leading-relaxed">
+                {slide.subtitle}
+              </p>
               <Link
                 to={slide.link}
                 className="inline-flex items-center px-8 py-3 bg-gradient-to-r from-pink-500 via-pink-600 to-pink-700 text-white rounded-full font-bold text-lg shadow-lg hover:shadow-pink-500 transition-all duration-300 transform hover:scale-110 hover:-translate-y-1 group"
@@ -152,7 +150,12 @@ function Carousel() {
                   stroke="currentColor"
                   viewBox="0 0 24 24"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17 8l4 4m0 0l-4 4m4-4H3"
+                  />
                 </svg>
               </Link>
             </div>
@@ -160,23 +163,25 @@ function Carousel() {
         </div>
       ))}
 
-      {/* Enhanced Controls */}
       <button
         aria-label="Previous slide"
-        onClick={prev}
+        onClick={() =>
+          setIndex((i) => (i - 1 + carouselSlides.length) % carouselSlides.length)
+        }
         className="absolute left-6 top-1/2 -translate-y-1/2 bg-white/30 backdrop-blur-md hover:bg-white/40 p-4 rounded-full shadow-xl hover:shadow-pink-300 hover:scale-125 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-pink-400/50 z-20 group border border-pink-300"
       >
         <FaChevronLeft className="w-5 h-5 text-pink-700 group-hover:text-pink-900 transition-colors duration-300" />
       </button>
       <button
         aria-label="Next slide"
-        onClick={next}
+        onClick={() =>
+          setIndex((i) => (i + 1) % carouselSlides.length)
+        }
         className="absolute right-6 top-1/2 -translate-y-1/2 bg-white/30 backdrop-blur-md hover:bg-white/40 p-4 rounded-full shadow-xl hover:shadow-pink-300 hover:scale-125 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-pink-400/50 z-20 group border border-pink-300"
       >
         <FaChevronRight className="w-5 h-5 text-pink-700 group-hover:text-pink-900 transition-colors duration-300" />
       </button>
 
-      {/* Enhanced Indicators */}
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3 z-20">
         {carouselSlides.map((_, i) => (
           <button
@@ -197,7 +202,6 @@ function Carousel() {
         ))}
       </div>
 
-      {/* Progress bar */}
       <div className="absolute bottom-0 left-0 w-full h-1 bg-white/30">
         <div
           className="h-full bg-gradient-to-r from-pink-500 to-pink-700 transition-all duration-4000 ease-linear"
@@ -205,7 +209,6 @@ function Carousel() {
         ></div>
       </div>
 
-      {/* Hidden live region for screen readers */}
       <div className="sr-only" aria-live="polite">
         {`Slide ${index + 1} of ${carouselSlides.length}: ${carouselSlides[index].title}`}
       </div>
@@ -225,7 +228,40 @@ function Loading() {
 }
 
 export default function HomePage() {
-  const { filtered, query, setSearchQuery, isLoading } = useProductSearch("");
+  const navigate = useNavigate();
+  const [searchText, setSearchText] = useState("");
+  const [products, setProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const isMountedRef = useRef(true);
+
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    const fetchAll = async () => {
+      setIsLoading(true);
+      try {
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products`);
+        if (isMountedRef.current) setProducts(res.data || []);
+      } catch (error) {
+        if (isMountedRef.current)
+          toast.error(error.response?.data?.message || "Error fetching products");
+      } finally {
+        if (isMountedRef.current) setIsLoading(false);
+      }
+    };
+    fetchAll();
+  }, []);
+
+  const handleSearch = () => {
+    if (searchText.trim() !== "") {
+      navigate(`/search-products?query=${encodeURIComponent(searchText.trim())}`);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-pink-100 relative overflow-x-hidden">
@@ -236,77 +272,74 @@ export default function HomePage() {
       </div>
 
       <div className="relative max-w-7xl mx-auto px-6 py-16">
-        <div className="text-center mb-12">
-      <h1 className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-300 via-pink-400 to-pink-500 mb-6 leading-tight" style={{ filter: 'drop-shadow(0 0 4px rgba(219, 112, 147, 0.3))' }}>
-        Welcome to Crystal Bloom
-      </h1>
-      <div className="w-24 h-1 bg-gradient-to-r from-pink-300 to-pink-400 mx-auto mb-6 rounded-full shadow-sm"></div>
-      <p className="text-xl text-pink-500 max-w-3xl mx-auto leading-relaxed font-medium">
-        Discover beauty essentials crafted to make you shine brighter than ever before
-      </p>
-      </div>
+       
+        {/* Search bar: icon only, navigates away */}
+<div className=" flex justify-center">
+  <div className="w-full max-w-3xl relative">
+    <div className="relative flex items-center gap-0 rounded-full overflow-hidden border border-pink-400 bg-white/90 backdrop-blur-xl drop-shadow-sm">
 
-
-        {/* Enhanced Search bar */}
-        <div className="mt-12 flex justify-center">
-          <div className="w-full max-w-3xl relative group">
-            <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-pink-700 rounded-full blur-xl opacity-25 group-hover:opacity-40 transition-opacity duration-300"></div>
-            <div className="relative flex items-center gap-0 shadow-2xl rounded-full overflow-hidden border-2 border-pink-300 bg-white/90 backdrop-blur-lg">
-              <input
-                type="text"
-                placeholder="Search makeup, skincare, collections..."
-                value={query}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                aria-label="Search"
-                className="flex-1 px-8 py-4 outline-none text-pink-700 bg-transparent placeholder-pink-400 text-lg"
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && query.trim() !== "") {
-                    setSearchQuery(query);
-                  }
-                }}
-              />
-              <button
-                type="button"
-                className="flex items-center gap-3 bg-gradient-to-r from-pink-600 to-pink-800 px-8 py-4 text-white font-bold text-lg hover:from-pink-700 hover:to-pink-900 transition-all duration-300 transform hover:scale-105"
-                onClick={() => {
-                  if (query.trim() !== "") setSearchQuery(query);
-                }}
-              >
-                <BsSearch size={20} />
-                Search
-              </button>
-            </div>
-          </div>
+      <input
+        type="text"
+        placeholder="Search makeup, skincare, collections..."
+        value={searchText}
+        onChange={(e) => setSearchText(e.target.value)}
+        aria-label="Search"
+        className="flex-1 px-6 py-3 outline-none text-pink-700 bg-transparent placeholder-pink-300 text-lg"
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            handleSearch();
+          }
+        }}
+      />
+      <div
+        onClick={handleSearch}
+        role="button"
+        aria-label="Search"
+        className="flex items-center justify-center px-5 py-3 cursor-pointer"
+      >
+        <div className="p-2 rounded-full bg-gradient-to-r from-pink-300 to-pink-500  hover:scale-140 transition-transform duration-200 ">
+          <BsSearch size={20} className="text-white" />
         </div>
+      </div>
+    </div>
+    {/* subtle outer glow / focus ring */}
+    <div className="pointer-events-none absolute inset-0 rounded-full ring-1 ring-pink-200/60"></div>
+  </div>
+</div>
 
         <Carousel />
 
+        {/* Featured Products header */}
         <div className="mt-20 flex flex-col md:flex-row items-center justify-between gap-6 mb-8">
           <div>
-            <h2 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-700 to-pink-900 mb-2">
+            <h2 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-pink-600 mb-2">
               Featured Products
             </h2>
-            <div className="w-16 h-1 bg-gradient-to-r from-pink-500 to-pink-700 rounded-full shadow-md"></div>
+            <div className="w-16 h-1 bg-gradient-to-r from-pink-400 to-pink-600 rounded-full shadow-md"></div>
           </div>
           <div className="text-lg text-pink-700 font-medium px-6 py-2 bg-white/70 backdrop-blur-lg rounded-full shadow-lg">
             {isLoading
               ? "Loading amazing products..."
-              : `${filtered.length} stunning item${filtered.length !== 1 ? "s" : ""} found`}
+              : `${products.length} stunning item${products.length !== 1 ? "s" : ""} found`}
           </div>
         </div>
 
+        {/* Featured / all products grid */}
         <div className="mt-8">
           {isLoading ? (
             <Loading />
-          ) : filtered.length === 0 ? (
+          ) : products.length === 0 ? (
             <div className="text-center text-pink-700 mt-16 py-16 bg-white/60 backdrop-blur-lg rounded-3xl shadow-xl">
               <div className="text-8xl mb-6">🔍</div>
-              <p className="text-2xl font-bold mb-2">No results for "{query}"</p>
-              <p className="text-lg">Try searching for something else - we have amazing products waiting for you!</p>
+              <p className="text-2xl font-bold mb-2">No products available</p>
+              <p className="text-lg">
+                Something went wrong or no products were returned. Please try again
+                later.
+              </p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-6">
-              {filtered.map((p) => (
+              {products.map((p) => (
                 <ProductCard key={p.productId || p._id} product={p} />
               ))}
             </div>
@@ -314,9 +347,8 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Enhanced Footer */}
-      <footer className="mt-24 bg-gradient-to-br from-pink-50 via-white to-pink-100 text-pink-700 pt-16 pb-10 relative overflow-hidden border-t-2 border-pink-300 shadow-inner shadow-pink-200">
-        {/* Footer background pattern */}
+      {/* Footer unchanged */}
+      <footer className="mt-10 bg-gradient-to-br from-pink-50 via-white to-pink-100 text-pink-700 pt-16 pb-10 relative overflow-hidden border-t-2 border-pink-300 shadow-inner shadow-pink-200">
         <div className="absolute inset-0 -z-10">
           <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-pink-100 to-white"></div>
           {[...Array(30)].map((_, i) => (
@@ -341,7 +373,8 @@ export default function HomePage() {
             </h4>
             <div className="w-12 h-1 bg-gradient-to-r from-pink-300 to-pink-500 rounded-full mb-4 shadow-lg"></div>
             <p className="text-base leading-relaxed">
-              Premium makeup & beauty essentials. Glow with confidence every day and embrace your natural radiance.
+              Premium makeup & beauty essentials. Glow with confidence every day and
+              embrace your natural radiance.
             </p>
           </div>
           <div>
@@ -373,7 +406,7 @@ export default function HomePage() {
             <h5 className="font-bold text-lg mb-4 text-pink-700">Contact</h5>
             <ul className="space-y-3 text-base">
               <li>Email: support@crystalbloom.com</li>
-              <li>Phone: +94 71 123 4567</li>
+              <li>Phone: +94 70 406 8597</li>
               <li>Address: Colombo, Sri Lanka</li>
             </ul>
           </div>
@@ -391,20 +424,19 @@ export default function HomePage() {
                 className="bg-pink-400 hover:bg-pink-500 text-white font-semibold px-6 py-3 rounded-full shadow-lg transition-all duration-300 hover:shadow-pink-400"
                 aria-label="Subscribe button"
               >
-                Subscribe 
+                Subscribe
               </button>
             </form>
           </div>
         </div>
 
-        <div className="mt-12 text-center border-t-2 border-pink-300 bg-white/60 backdrop-blur-md shadow-inner shadow-pink-200 py-6">
+        <div className="mt-10 text-center border-t-2 border-pink-300 bg-white/60 backdrop-blur-md shadow-inner shadow-pink-200 py-4">
           <p className="text-base text-pink-600 font-medium">
             &copy; {new Date().getFullYear()} Crystal Bloom. All rights reserved.
           </p>
         </div>
       </footer>
 
-      {/* Glowing text animation style */}
       <style jsx>{`
         @keyframes glow {
           0%,
