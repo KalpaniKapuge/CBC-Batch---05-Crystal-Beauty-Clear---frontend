@@ -5,6 +5,17 @@ import { useNavigate } from "react-router-dom";
 import { GrGoogle } from "react-icons/gr";
 import { useGoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 
+const Card = ({ children }) => (
+  <div className="relative w-full max-w-md bg-white/60 backdrop-blur-md rounded-3xl shadow-2xl overflow-hidden ring-1 ring-pink-100 hover:shadow-3xl transition-all duration-300">
+    {/* Decorative glowing blobs */}
+    <div className="absolute inset-0 pointer-events-none">
+      <div className="absolute -top-20 -right-20 w-60 h-60 bg-pink-100 rounded-full blur-3xl opacity-60 animate-pulse"></div>
+      <div className="absolute bottom-8 left-8 w-48 h-48 bg-pink-200 rounded-full blur-2xl opacity-30"></div>
+    </div>
+    <div className="relative p-10">{children}</div>
+  </div>
+);
+
 export default function LoginPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -14,7 +25,6 @@ export default function LoginPage() {
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
-
     const cleanedEmail = email.trim();
     const cleanedPassword = password.trim();
 
@@ -25,7 +35,6 @@ export default function LoginPage() {
 
     setIsSubmitting(true);
     try {
-      // Debug payload
       console.log("📦 Payload being sent:", {
         email: cleanedEmail,
         password: cleanedPassword,
@@ -33,15 +42,8 @@ export default function LoginPage() {
 
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/users/login`,
-        {
-          email: cleanedEmail,
-          password: cleanedPassword,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+        { email: cleanedEmail, password: cleanedPassword },
+        { headers: { "Content-Type": "application/json" } }
       );
 
       toast.success("Login successful");
@@ -75,54 +77,93 @@ export default function LoginPage() {
   });
 
   return (
-    <GoogleOAuthProvider clientId={clientId}>
-      <div className="w-full h-screen flex items-center justify-center bg-pink-50 px-4">
-        <div className="bg-white p-8 rounded-3xl shadow-2xl w-full max-w-sm">
-          <h2 className="text-3xl font-bold mb-6 text-pink-600 text-center">Login</h2>
+    <GoogleOAuthProvider clientId={clientId || ""}>
+      <div className="w-full min-h-screen flex items-center justify-center bg-gradient-to-r from-white via-pink-200 to-white px-4">
+        <Card>
+          <h2 className="text-4xl font-extrabold mb-2 text-pink-500 text-center">
+            Welcome Back
+          </h2>
+          <p className="text-center text-gray-600 mb-10 mt-4">
+            Log in to access your beauty essentials.
+          </p>
 
-          <form onSubmit={handleLoginSubmit} className="space-y-4">
-            <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-3 border border-pink-300 rounded-lg"
-              disabled={isSubmitting}
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-3 border border-pink-300 rounded-lg"
-              disabled={isSubmitting}
-            />
+          <form onSubmit={handleLoginSubmit} className="space-y-5">
+            <div className="relative">
+              <label className="sr-only" htmlFor="email">
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-5 py-3 border border-pink-300 rounded-xl shadow-sm placeholder-pink-400 focus:outline-none focus:ring-3 focus:ring-pink-300 transition disabled:opacity-60"
+                disabled={isSubmitting}
+                aria-label="Email"
+                required
+              />
+            </div>
+            <div className="relative">
+              <label className="sr-only" htmlFor="password">
+                Password
+              </label>
+              <input
+                id="password"
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-5 py-3 border border-pink-300 rounded-xl shadow-sm placeholder-pink-400 focus:outline-none focus:ring-3 focus:ring-pink-300 transition disabled:opacity-60"
+                disabled={isSubmitting}
+                aria-label="Password"
+                required
+              />
+            </div>
             <button
               type="submit"
-              className={`w-full py-3 rounded-lg text-white font-medium ${
-                isSubmitting ? "bg-pink-300 cursor-not-allowed" : "bg-pink-500 hover:bg-pink-600"
+              className={`w-full text-xl flex cursor-pointer justify-center items-center gap-2 py-3 rounded-xl font-semibold text-white transition-all duration-200 shadow-lg transform ${
+                isSubmitting
+                  ? "bg-pink-300 cursor-not-allowed"
+                  : "bg-gradient-to-r from-pink-400 to-pink-500 hover:scale-[1.03]"
               }`}
               disabled={isSubmitting}
+              aria-label="Submit login"
             >
               {isSubmitting ? "Logging in..." : "Login"}
             </button>
           </form>
 
-          <div className="relative flex items-center my-4">
-            <div className="flex-grow h-px bg-pink-200" />
-            <span className="mx-3 text-sm text-pink-500 font-medium">OR</span>
-            <div className="flex-grow h-px bg-pink-200" />
+          <div className="flex items-center my-6">
+            <div className="flex-1 h-px bg-pink-300"></div>
+            <div className="mx-3 text-sm text-pink-500 font-medium">OR</div>
+            <div className="flex-1 h-px bg-pink-300"></div>
           </div>
 
           <button
             onClick={() => googleLogin()}
             type="button"
-            className="w-full flex items-center justify-center gap-2 border border-pink-400 text-pink-700 py-2 rounded-lg hover:bg-pink-50"
+            className="w-full flex items-center justify-center gap-3 border border-pink-300 py-3 rounded-xl hover:bg-pink-200 cursor-pointer transition shadow-inner font-medium relative overflow-hidden"
+            aria-label="Login with Google"
           >
-            <GrGoogle className="text-xl" />
-            <span className="font-semibold">Login with Google</span>
+            <div className="flex items-center gap-2">
+              <div className="p-2 rounded-full  ">
+                <GrGoogle className="text-xl text-pink-600" />
+              </div>
+              <span className="text-pink-600">Login with Google</span>
+            </div>
           </button>
-        </div>
+
+          <div className="mt-6 text-center text-sm text-gray-500">
+            Don’t have an account?{" "}
+            <span
+              onClick={() => navigate("/register")}
+              className="text-pink-600 font-semibold cursor-pointer hover:underline"
+            >
+              Register
+            </span>
+          </div>
+        </Card>
       </div>
     </GoogleOAuthProvider>
   );
