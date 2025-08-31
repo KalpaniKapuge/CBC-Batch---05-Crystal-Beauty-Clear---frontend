@@ -1,11 +1,15 @@
 import { Routes, Route } from "react-router-dom";
 import Header from "./components/header.jsx";
 import HomePage from "../pages/home.jsx";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import SearchProductPage from "../pages/client/searchProductsPage.jsx";
 import LoginPage from "../pages/login.jsx";
 import RegisterPage from "../pages/register.jsx";
-
+import ProductOverviewPage from "../pages/client/productOverview.jsx";
+import AdminProductsPage from "../admin/adminProductsPage.jsx"
+import AddProductPage from "../admin/addProductPage.jsx";
+import EditProductPage from "../admin/editProductPage.jsx";
+import AdminOrdersPage from "../admin/adminOrdersPage.jsx";
 
 // Placeholder pages
 function About() {
@@ -20,24 +24,7 @@ function About() {
     </div>
   );
 }
-function Login() {
-  return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="p-8 bg-white rounded-xl shadow-lg">
-        <h2 className="text-2xl font-bold text-pink-600 mb-4">Login</h2>
-      </div>
-    </div>
-  );
-}
-function Register() {
-  return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="p-8 bg-white rounded-xl shadow-lg">
-        <h2 className="text-2xl font-bold text-pink-600 mb-4">Register</h2>
-      </div>
-    </div>
-  );
-}
+
 function Cart() {
   return (
     <div className="min-h-screen flex items-center justify-center">
@@ -56,11 +43,16 @@ export default function App() {
       <Toaster position="top-right" />
       <Routes>
         <Route path="/" element={<HomePage />} />
-         <Route path="/search-products" element={<SearchProductPage />} />
+        <Route path="/search-products" element={<SearchProductPage />} />
         <Route path="/about" element={<About />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/overview/:id" element={<ProductOverviewPage />} />
+        <Route path="/admin/products" element={<AdminProductsPage />} />
+        <Route path="/admin/add-product" element={<AddProductPage />} />
+        <Route path="/admin/edit-product" element={<EditProductPage />} />
+        <Route path="/admin/orders" element={<AdminOrdersPage />} />
       </Routes>
     </>
   );

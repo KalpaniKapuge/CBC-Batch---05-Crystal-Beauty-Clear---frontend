@@ -35,7 +35,7 @@ export default function LoginPage() {
 
     setIsSubmitting(true);
     try {
-      console.log("📦 Payload being sent:", {
+      console.log("Payload being sent:", {
         email: cleanedEmail,
         password: cleanedPassword,
       });

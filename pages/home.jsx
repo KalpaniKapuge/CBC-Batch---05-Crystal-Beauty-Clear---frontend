@@ -437,7 +437,7 @@ export default function HomePage() {
         </div>
       </footer>
 
-      <style jsx>{`
+      <style>{`
         @keyframes glow {
           0%,
           100% {

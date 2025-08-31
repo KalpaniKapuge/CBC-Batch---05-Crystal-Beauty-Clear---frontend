@@ -2,16 +2,16 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import ImageSlider from "../components/imageSlider.jsx"; // adjust path as needed
-import Loading from "../components/loading.jsx"; // adjust path as needed
-import { addToCart, getCart } from "../utils/cart.jsx"; // make sure these are imported correctly
+import ImageSlider from "../../src/components/imageSlider.jsx";
+import Loading from "../../src/components/loading.jsx";
+import { addToCart, getCart } from "../../utils/cart.js";
 
 export default function ProductOverviewPage() {
   const navigate = useNavigate();
   const params = useParams();
   const productId = params.id;
 
-  const [status, setStatus] = useState("loading"); // loading, success, error
+  const [status, setStatus] = useState("loading");
   const [product, setProduct] = useState(null);
 
   useEffect(() => {
@@ -44,77 +44,96 @@ export default function ProductOverviewPage() {
   return (
     <>
       {status === "success" && product && (
-        <div className="w-full h-full flex flex-col md:flex-row p-4">
-          <div className="md:w-1/2 w-full h-full flex justify-center items-center">
-            <ImageSlider images={product.images} />
+        <div className="w-full min-h-screen flex flex-col md:flex-row p-6 bg-gray-50">
+          {/* Image Section */}
+          <div className="md:w-1/2 w-full h-full flex justify-center items-center mb-6 md:mb-0">
+            <ImageSlider images={product.images || ["https://via.placeholder.com/400"]} />
           </div>
-          <div className="md:w-1/2 w-full h-full flex flex-col justify-center items-center px-6">
-            <h1 className="text-4xl text-secondary font-semibold text-center">
+
+          {/* Product Details Section */}
+          <div className="md:w-1/2 w-full h-full flex flex-col justify-start items-start px-6">
+            <h1 className="text-3xl md:text-4xl text-gray-800 font-bold mb-2">
               {product.name}
-              {product.altNames &&
-                product.altNames.map((altName, index) => (
-                  <span key={index} className="text-4xl text-gray-600 mx-2">
-                    | {altName}
-                  </span>
-                ))}
+              {product.altNames && product.altNames.length > 0 && (
+                <span className="text-xl text-gray-500 mx-2">
+                  ({product.altNames.join(", ")})
+                </span>
+              )}
             </h1>
-            <h2 className="text-md text-gray-600 font-semibold mt-2">
+            <h2 className="text-sm text-gray-500 font-medium mb-4">
               Product ID: {product.productId}
             </h2>
-            <p className="text-md text-gray-600 font-semibold my-4 text-center">
-              {product.description}
+            <p className="text-base text-gray-600 mb-6 leading-relaxed">
+              {product.description || "No description available."}
             </p>
-            <div className="text-center my-4">
+
+            {/* Pricing */}
+            <div className="mb-6">
               {product.labelledPrice > product.price ? (
-                <>
-                  <span className="text-2xl text-gray-500 line-through mx-2">
+                <div className="flex items-center gap-4">
+                  <span className="text-2xl text-gray-400 line-through">
                     ${product.labelledPrice.toFixed(2)}
                   </span>
-                  <span className="text-3xl font-bold text-accent mx-2">
+                  <span className="text-3xl font-bold text-pink-600">
                     ${product.price.toFixed(2)}
                   </span>
-                </>
+                  <span className="text-sm text-green-600">
+                    ({Math.round(((product.labelledPrice - product.price) / product.labelledPrice) * 100)}% off)
+                  </span>
+                </div>
               ) : (
-                <span className="text-3xl font-bold text-accent">
+                <span className="text-3xl font-bold text-pink-600">
                   ${product.price.toFixed(2)}
                 </span>
               )}
             </div>
-            <div className="flex gap-4 mt-6">
+
+            {/* Specifications */}
+            {product.specifications && (
+              <div className="mb-6 w-full">
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">Specifications</h3>
+                <ul className="list-disc list-inside text-gray-600">
+                  {Object.entries(product.specifications).map(([key, value]) => (
+                    <li key={key} className="text-sm">
+                      <span className="font-medium">{key}:</span> {value}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Action Buttons */}
+            <div className="flex gap-4 mt-4">
               <button
                 onClick={() => {
-                  console.log("old cart");
-                  console.log(getCart());
-
+                  console.log("Current cart:", getCart());
                   addToCart(product, 1);
-
-                  console.log("new cart");
-                  console.log(getCart());
+                  console.log("Updated cart:", getCart());
                   toast.success("Added to cart");
                 }}
-                className="w-[200px] bg-accent text-white py-2 rounded-2xl hover:bg-accent/80 transition-all duration-300"
+                className="w-[200px] bg-pink-500 text-white py-3 rounded-2xl hover:bg-pink-600 transition-all duration-300 font-semibold"
               >
-                Add To Cart
+                Add to Cart
               </button>
-              <button className="w-[200px] bg-accent text-white py-2 rounded-2xl hover:bg-accent/80 transition-all duration-300"
-              onClick={
-                () => {
-                  navigate("/cheackout",{
-                    state:{
-                      cart:[
+              <button
+                onClick={() => {
+                  navigate("/checkout", {
+                    state: {
+                      cart: [
                         {
-                          productId:product.productId,
-                          name:product.name,
-                          image:product.images[0],
-                          price:product.price,
-                          labelledPrice:product.labelledPrice,
-                          qty:1
-                        }
-                      ]
-                    }
-                  })
-                }
-              }>
+                          productId: product.productId,
+                          name: product.name,
+                          image: product.images[0] || "https://via.placeholder.com/150",
+                          price: product.price,
+                          labelledPrice: product.labelledPrice,
+                          qty: 1,
+                        },
+                      ],
+                    },
+                  });
+                }}
+                className="w-[200px] bg-pink-600 text-white py-3 rounded-2xl hover:bg-pink-700 transition-all duration-300 font-semibold"
+              >
                 Buy Now
               </button>
             </div>
