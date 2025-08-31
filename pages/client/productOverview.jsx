@@ -4,7 +4,8 @@ import axios from "axios";
 import { toast } from "react-hot-toast";
 import ImageSlider from "../../src/components/imageSlider.jsx";
 import Loading from "../../src/components/loading.jsx";
-import { addToCart, getCart } from "../../utils/cart.js";
+import { addToCart } from "../../utils/cart.js";
+import { BiPlus, BiMinus } from "react-icons/bi";
 
 export default function ProductOverviewPage() {
   const navigate = useNavigate();
@@ -13,12 +14,12 @@ export default function ProductOverviewPage() {
 
   const [status, setStatus] = useState("loading");
   const [product, setProduct] = useState(null);
+  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     axios
       .get(`${import.meta.env.VITE_BACKEND_URL}/api/products/${productId}`)
       .then((response) => {
-        console.log(response.data);
         setProduct(response.data);
         setStatus("success");
       })
@@ -28,6 +29,14 @@ export default function ProductOverviewPage() {
         toast.error("Error fetching product details");
       });
   }, [productId]);
+
+  const handleIncrease = () => {
+    setQuantity((prev) => prev + 1);
+  };
+
+  const handleDecrease = () => {
+    setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
+  };
 
   if (status === "loading") {
     return <Loading />;
@@ -88,6 +97,26 @@ export default function ProductOverviewPage() {
               )}
             </div>
 
+            {/* Quantity Selector */}
+            <div className="flex items-center gap-4 mb-6">
+              <span className="text-lg font-medium text-gray-800">Quantity:</span>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handleDecrease}
+                  className="bg-pink-500 text-white p-2 rounded-full hover:bg-pink-600 transition-all duration-300"
+                >
+                  <BiMinus size={20} />
+                </button>
+                <span className="text-lg font-bold">{quantity}</span>
+                <button
+                  onClick={handleIncrease}
+                  className="bg-pink-500 text-white p-2 rounded-full hover:bg-pink-600 transition-all duration-300"
+                >
+                  <BiPlus size={20} />
+                </button>
+              </div>
+            </div>
+
             {/* Specifications */}
             {product.specifications && (
               <div className="mb-6 w-full">
@@ -106,10 +135,9 @@ export default function ProductOverviewPage() {
             <div className="flex gap-4 mt-4">
               <button
                 onClick={() => {
-                  console.log("Current cart:", getCart());
-                  addToCart(product, 1);
-                  console.log("Updated cart:", getCart());
-                  toast.success("Added to cart");
+                  addToCart(product, quantity);
+                  toast.success(`Added ${quantity} item${quantity > 1 ? "s" : ""} to cart`);
+                  navigate("/cart");
                 }}
                 className="w-[200px] bg-pink-500 text-white py-3 rounded-2xl hover:bg-pink-600 transition-all duration-300 font-semibold"
               >
@@ -126,7 +154,7 @@ export default function ProductOverviewPage() {
                           image: product.images[0] || "https://via.placeholder.com/150",
                           price: product.price,
                           labelledPrice: product.labelledPrice,
-                          qty: 1,
+                          qty: quantity,
                         },
                       ],
                     },

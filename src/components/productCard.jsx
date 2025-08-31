@@ -1,7 +1,10 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { addToCart } from "../../utils/cart.js";
+import { toast } from "react-hot-toast";
 
 export default function ProductCard({ product }) {
+  const navigate = useNavigate();
   const imageSrc =
     (product.images && product.images.length > 0 && product.images[0]) ||
     "https://via.placeholder.com/150";
@@ -36,21 +39,48 @@ export default function ProductCard({ product }) {
           <span className="block text-xs uppercase font-semibold tracking-wider text-gray-400 mb-1">
             Labelled Price
           </span>
-          <p className=" text-gray-500 line-through text-sm">${product.labelledPrice}</p>
+          <p className="text-gray-500 line-through text-sm">${product.labelledPrice.toFixed(2)}</p>
         </div>
         <div className="text-right">
           <span className="block text-xs uppercase font-semibold tracking-wider text-pink-500 mb-1">
             Price
           </span>
-          <h2 className="text-3xl font-bold text-pink-500">${product.price}</h2>
+          <h2 className="text-3xl font-bold text-pink-500">${product.price.toFixed(2)}</h2>
         </div>
       </div>
 
       <div className="flex gap-4">
-        <button className="flex-1 bg-pink-100 border border-pink-400 text-pink-700 font-semibold py-3 rounded-2xl hover:bg-pink-200 hover:border-pink-500 transition-all duration-300 shadow-sm">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            addToCart(product, 1);
+            toast.success("Added to cart");
+            navigate("/cart");
+          }}
+          className="flex-1 bg-pink-100 border border-pink-400 text-pink-700 font-semibold py-3 rounded-2xl hover:bg-pink-200 hover:border-pink-500 transition-all duration-300 shadow-sm"
+        >
           Add to Cart
         </button>
-        <button className="flex-1 bg-pink-500 text-white font-semibold py-3 rounded-2xl hover:bg-pink-600 transition-all duration-300 shadow-md">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            navigate("/checkout", {
+              state: {
+                cart: [
+                  {
+                    productId: product.productId,
+                    name: product.name,
+                    image: product.images[0] || "https://via.placeholder.com/150",
+                    price: product.price,
+                    labelledPrice: product.labelledPrice,
+                    qty: 1,
+                  },
+                ],
+              },
+            });
+          }}
+          className="flex-1 bg-pink-500 text-white font-semibold py-3 rounded-2xl hover:bg-pink-600 transition-all duration-300 shadow-md"
+        >
           Buy Now
         </button>
       </div>
