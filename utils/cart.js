@@ -21,7 +21,7 @@ export function addToCart(product, qty) {
     cart.push({
       productId: product.productId,
       name: product.name,
-      image: product.image ? product.image[0] : "",
+      image: product.images && product.images.length > 0 ? product.images[0] : "https://via.placeholder.com/150",
       price: product.price,
       labelledPrice: product.labelledPrice,
       qty: qty,

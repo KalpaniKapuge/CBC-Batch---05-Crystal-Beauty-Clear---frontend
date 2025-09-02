@@ -24,81 +24,139 @@ export default function CartPage() {
   };
 
   return (
-    <div className="w-full h-full flex flex-col items-center pt-4 relative">
-      <div className="w-[400px] h-[80px] shadow-2xl absolute top-1 right-1 flex flex-col justify-center items-center bg-white rounded-xl p-4">
-        <p className="text-2xl text-secondary font-bold">
-          Total:
-          <span className="text-accent font-bold mx-2">Rs.{getTotal().toFixed(2)}</span>
-        </p>
-        <Link
-          to="/checkout"
-          state={{ cart }}
-          className="text-white bg-accent px-4 py-2 rounded-lg font-bold hover:bg-secondary transition-all duration-300"
-        >
-          Checkout
-        </Link>
+    <div className="min-h-screen bg-pink-50 flex flex-col items-center py-6 px-4 lg:px-8">
+      <div className="w-full max-w-7xl flex flex-col lg:flex-row gap-6">
+        {/* Cart Items Section */}
+        <div className="w-full lg:w-2/3">
+          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">Shopping Cart ({cart.length} items)</h2>
+            {cart.length === 0 ? (
+              <div className="bg-white rounded-lg p-8 text-center border border-pink-200">
+                <p className="text-lg font-medium text-gray-700 mb-2">Your cart is empty</p>
+                <p className="text-gray-500 mb-4">Explore our products and add items to your cart!</p>
+                <Link
+                  to="/shop"
+                  className="inline-block px-6 py-2 bg-pink-600 text-white rounded-lg font-medium hover:bg-pink-700 transition-colors duration-200"
+                >
+                  Start Shopping
+                </Link>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {cart.map((item) => (
+                  <div
+                    key={item.productId}
+                    className="flex flex-row items-center gap-4 p-4 border-b border-pink-300 hover:bg-pink-100 transition-colors duration-200"
+                  >
+                    <img
+                      src={item.image || "https://via.placeholder.com/150"}
+                      alt={item.name}
+                      className="w-16 h-16 object-cover rounded-md border border-pink-200"
+                    />
+                    <div className="flex-1">
+                      <h3 className="text-base font-medium text-gray-800">{item.name}</h3>
+                      <p className="text-sm text-gray-500">{item.productId}</p>
+                      <div className="flex items-center mt-1">
+                        {item.labelledPrice > item.price ? (
+                          <>
+                            <span className="text-sm text-gray-400 line-through mr-2">
+                              Rs.{item.labelledPrice.toFixed(2)}
+                            </span>
+                            <span className="text-base font-semibold text-pink-600">
+                              Rs.{item.price.toFixed(2)}
+                            </span>
+                          </>
+                        ) : (
+                          <span className="text-base font-semibold text-pink-600">
+                            Rs.{item.price.toFixed(2)}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        className="p-1 bg-pink-200 rounded-md hover:bg-pink-200 transition-colors duration-200"
+                        onClick={() => handleDecrease(item)}
+                        aria-label={`Decrease quantity of ${item.name}`}
+                      >
+                        <BiMinus className="w-4 h-4 text-gray-600" />
+                      </button>
+                      <span className="text-base font-medium text-gray-700 w-8 text-center">{item.qty}</span>
+                      <button
+                        className="p-1 bg-pink-200 rounded-md hover:bg-pink-200 transition-colors duration-200"
+                        onClick={() => handleIncrease(item)}
+                        aria-label={`Increase quantity of ${item.name}`}
+                      >
+                        <BiPlus className="w-4 h-4 text-gray-600" />
+                      </button>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-base font-semibold text-gray-800">
+                        Rs.{(item.price * item.qty).toFixed(2)}
+                      </p>
+                    </div>
+                    <button
+                      className="p-1 bg-pink-200 rounded-md hover:bg-pink-200 text-gray-600 transition-colors duration-200"
+                      onClick={() => handleRemove(item.productId)}
+                      aria-label={`Remove ${item.name} from cart`}
+                    >
+                      <BiTrash className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Order Summary Section */}
+        <div className="w-full lg:w-1/3">
+          <div className="bg-white rounded-lg shadow-md p-6 sticky top-6">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">Order Summary</h2>
+            <div className="flex justify-between text-gray-700 mb-2">
+              <span>Subtotal</span>
+              <span>Rs.{getTotal().toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between text-gray-700 mb-4">
+              <span>Shipping</span>
+              <span className="text-gray-500">Calculated at checkout</span>
+            </div>
+            <div className="flex justify-between font-semibold text-gray-800 border-t border-pink-300 pt-4 mb-4">
+              <span>Total</span>
+              <span>Rs.{getTotal().toFixed(2)}</span>
+            </div>
+            <Link
+              to="/checkout"
+              state={{ cart }}
+              className="w-full flex justify-center items-center py-3 bg-pink-600 text-white rounded-lg font-semibold hover:bg-pink-700 transition-colors duration-200"
+            >
+              Proceed to Checkout
+              <svg
+                className="w-5 h-5 ml-2 transition-transform duration-200 group-hover:translate-x-1"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M17 8l4 4m0 0l-4 4m4-4H3"
+                />
+              </svg>
+            </Link>
+          </div>
+        </div>
       </div>
 
-      {cart.length === 0 ? (
-        <p className="mt-20 text-gray-600 text-lg">Your cart is empty.</p>
-      ) : (
-        cart.map((item) => (
-          <div
-            key={item.productId}
-            className="w-[600px] h-[100px] rounded-tl-3xl rounded-bl-3xl my-4 bg-white shadow-2xl flex flex-row relative justify-center items-center"
-          >
-            <img src={item.image} alt={item.name} className="w-[100px] h-[100px] object-cover pl-4" />
-
-            <div className="w-[250px] h-full flex flex-col justify-center items-start pl-4">
-              <h1 className="text-2xl text-secondary font-semibold">{item.name}</h1>
-              <h1 className="text-md text-gray-600 font-semibold">{item.productId}</h1>
-              {item.labelledPrice > item.price ? (
-                <div>
-                  <span className="text-md mx-1 text-gray-500 line-through">
-                    Rs.{item.labelledPrice.toFixed(2)}
-                  </span>
-                  <span className="text-md mx-1 font-bold text-accent">
-                    Rs.{item.price.toFixed(2)}
-                  </span>
-                </div>
-              ) : (
-                <span className="text-md mx-1 font-bold text-accent">
-                  Rs.{item.price.toFixed(2)}
-                </span>
-              )}
-            </div>
-
-            <div className="h-full max-w-[100px] w-[100px] flex flex-row justify-evenly items-center">
-              <button
-                className="text-white font-bold rounded-xl hover:bg-secondary p-2 text-xl cursor-pointer aspect-square bg-accent"
-                onClick={() => handleDecrease(item)}
-              >
-                <BiMinus />
-              </button>
-              <h1 className="text-xl text-secondary font-semibold h-full flex items-center">{item.qty}</h1>
-              <button
-                className="text-white font-bold rounded-xl hover:bg-secondary p-2 text-xl cursor-pointer aspect-square bg-accent"
-                onClick={() => handleIncrease(item)}
-              >
-                <BiPlus />
-              </button>
-            </div>
-
-            <div className="h-full w-[200px] flex flex-col justify-center items-end pr-4">
-              <h1 className="text-2xl text-secondary font-semibold">
-                Rs.{(item.price * item.qty).toFixed(2)}
-              </h1>
-            </div>
-
-            <button
-              className="absolute hover:bg-red-600 hover:text-white rounded-full p-2 right-[-35px] text-red-600 cursor-pointer"
-              onClick={() => handleRemove(item.productId)}
-            >
-              <BiTrash />
-            </button>
-          </div>
-        ))
-      )}
+      <style>{`
+        body {
+          font-family: 'Arial', sans-serif;
+        }
+        .sticky {
+          position: sticky;
+        }
+      `}</style>
     </div>
   );
 }
