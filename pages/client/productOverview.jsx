@@ -4,7 +4,8 @@ import axios from "axios";
 import { toast } from "react-hot-toast";
 import Loading from "../../src/components/loading.jsx";
 import { addToCart } from "../../utils/cart.js";
-import { BiPlus, BiMinus, BiHeart } from "react-icons/bi";
+import { addToWishlist, removeFromWishlist, isInWishlist } from "../../utils/wishlist.js";
+import { BiPlus, BiMinus, BiHeart, BiSolidHeart } from "react-icons/bi";
 
 export default function ProductOverviewPage() {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ export default function ProductOverviewPage() {
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [mainImage, setMainImage] = useState("");
+  const [inWishlist, setInWishlist] = useState(false);
 
   useEffect(() => {
     axios
@@ -22,6 +24,7 @@ export default function ProductOverviewPage() {
       .then((response) => {
         setProduct(response.data);
         setMainImage(response.data.images?.[0] || "https://via.placeholder.com/400");
+        setInWishlist(isInWishlist(response.data.productId));
         setStatus("success");
       })
       .catch((error) => {
@@ -33,6 +36,18 @@ export default function ProductOverviewPage() {
 
   const handleIncrease = () => setQuantity((prev) => prev + 1);
   const handleDecrease = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
+
+  const toggleWishlist = () => {
+    if (inWishlist) {
+      removeFromWishlist(product.productId);
+      toast.success("Removed from wishlist");
+    } else {
+      addToWishlist(product);
+      toast.success("Added to wishlist");
+    }
+    setInWishlist(!inWishlist);
+    navigate("/wishlist"); // Navigate to wishlist page after toggling
+  };
 
   if (status === "loading") {
     return <Loading />;
@@ -100,10 +115,14 @@ export default function ProductOverviewPage() {
 
                     {/* Wishlist Button */}
                     <button
-                      onClick={() => navigate("/wishlist")}
-                      className="absolute top-3 right-3 p-2 rounded-full  bg-pink-600  shadow hover:bg-white hover:border-pink-600 hover:border-2 transition"
+                      onClick={toggleWishlist}
+                      className="absolute top-3 right-3 p-2 rounded-full bg-pink-600 shadow hover:bg-white hover:border-pink-600 hover:border-2 transition"
                     >
-                      <BiHeart size={20} className="text-white hover:text-pink-600 " />
+                      {inWishlist ? (
+                        <BiSolidHeart size={20} className="text-white hover:text-pink-600" />
+                      ) : (
+                        <BiHeart size={20} className="text-white hover:text-pink-600" />
+                      )}
                     </button>
                   </div>
                 </div>
@@ -227,7 +246,7 @@ export default function ProductOverviewPage() {
                             },
                           });
                         }}
-                        className="flex-1 text-pink-500 bg-white py-3 border-2 border-pink-500  rounded-lg font-semibold text-base hover:bg-pink-200 transition"
+                        className="flex-1 text-pink-500 bg-white py-3 border-2 border-pink-500 rounded-lg font-semibold text-base hover:bg-pink-200 transition"
                       >
                         Buy Now
                       </button>

@@ -1,6 +1,8 @@
+// Modified header.jsx
 import { useState, useEffect } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { BsCart } from "react-icons/bs";
+import { BiHeart } from "react-icons/bi"; // Added BiHeart for wishlist icon
 import { Link, useNavigate } from "react-router-dom";
 
 
@@ -83,6 +85,7 @@ export default function Header() {
         >
           About
         </Link>
+        
       </nav>
 
       <div className="flex items-center gap-4 ml-auto">
@@ -122,7 +125,14 @@ export default function Header() {
           </div>
         )}
 
-        <div className="hidden md:flex items-center">
+        <div className="hidden md:flex items-center gap-4"> {/* Added gap for multiple icons */}
+          <Link
+            to="/wishlist"
+            aria-label="Go to wishlist"
+            className="flex items-center justify-center w-14 h-14 bg-gradient-to-br from-pink-500 to-pink-600 rounded-full text-white shadow-lg hover:scale-105 transform transition"
+          >
+            <BiHeart size={24} />
+          </Link>
           <Link
             to="/cart"
             aria-label="Go to cart"
@@ -175,6 +185,7 @@ export default function Header() {
               <Link to="/about" onClick={closeDrawer} className="hover:text-pink-600 rounded-md px-2 py-1 transition">
                 About
               </Link>
+              
               <Link to="/cart" onClick={closeDrawer} className="flex items-center space-x-3 hover:text-pink-600 rounded-md px-2 py-1 transition">
                 <BsCart size={22} />
                 <span>Cart</span>

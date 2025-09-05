@@ -1,3 +1,4 @@
+// Modified App.jsx
 import { Routes, Route } from "react-router-dom";
 import Header from "./components/header.jsx";
 import HomePage from "../pages/home.jsx";
@@ -6,8 +7,9 @@ import SearchProductPage from "../pages/client/searchProductsPage.jsx";
 import LoginPage from "../pages/login.jsx";
 import RegisterPage from "../pages/register.jsx";
 import ProductOverviewPage from "../pages/client/productOverview.jsx";
-import CartPage from "../pages/client/cart.jsx"; // Assuming path to cart.jsx
-import CheckoutPage from "../pages/client/checkout.jsx"; // Assuming path to checkout.jsx
+import CartPage from "../pages/client/cart.jsx"; 
+import CheckoutPage from "../pages/client/checkout.jsx"; 
+import WishlistPage from "../pages/client/wishlist.jsx"; // Added import for WishlistPage
 import AdminProductsPage from "../admin/adminProductsPage.jsx";
 import AddProductPage from "../admin/addProductPage.jsx";
 import EditProductPage from "../admin/editProductPage.jsx";
@@ -40,6 +42,7 @@ export default function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/checkout" element={<CheckoutPage />} />
+        <Route path="/wishlist" element={<WishlistPage />} /> {/* Added route for wishlist */}
         <Route path="/overview/:id" element={<ProductOverviewPage />} />
         <Route path="/admin/products" element={<AdminProductsPage />} />
         <Route path="/admin/add-product" element={<AddProductPage />} />
