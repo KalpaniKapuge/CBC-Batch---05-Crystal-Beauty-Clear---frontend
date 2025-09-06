@@ -14,20 +14,7 @@ import AdminProductsPage from "../admin/adminProductsPage.jsx";
 import AddProductPage from "../admin/addProductPage.jsx";
 import EditProductPage from "../admin/editProductPage.jsx";
 import AdminOrdersPage from "../admin/adminOrdersPage.jsx";
-
-// Placeholder pages
-function About() {
-  return (
-    <div className="min-h-screen flex items-center justify-center p-6">
-      <div className="max-w-xl text-center">
-        <h1 className="text-4xl font-bold text-pink-600 mb-4">About Us</h1>
-        <p className="text-gray-700">
-          Crystal Bloom is dedicated to bringing you the finest makeup and beauty products with a touch of elegance.
-        </p>
-      </div>
-    </div>
-  );
-}
+import Collection from "../pages/collection.jsx";
 
 export default function App() {
   return (
@@ -37,7 +24,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/search-products" element={<SearchProductPage />} />
-        <Route path="/about" element={<About />} />
+        <Route path="/collection" element={<Collection />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/cart" element={<CartPage />} />

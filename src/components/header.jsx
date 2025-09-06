@@ -80,10 +80,10 @@ export default function Header() {
           Home
         </Link>
         <Link
-          to="/about"
+          to="/collection"
           className="relative px-3 py-2 rounded-full hover:text-white hover:bg-pink-600 transition-all duration-200"
         >
-          About
+          Collection
         </Link>
         
       </nav>
@@ -182,8 +182,8 @@ export default function Header() {
               <Link to="/" onClick={closeDrawer} className="hover:text-pink-600 rounded-md px-2 py-1 transition">
                 Home
               </Link>
-              <Link to="/about" onClick={closeDrawer} className="hover:text-pink-600 rounded-md px-2 py-1 transition">
-                About
+              <Link to="/collection" onClick={closeDrawer} className="hover:text-pink-600 rounded-md px-2 py-1 transition">
+                Collection
               </Link>
               
               <Link to="/cart" onClick={closeDrawer} className="flex items-center space-x-3 hover:text-pink-600 rounded-md px-2 py-1 transition">
