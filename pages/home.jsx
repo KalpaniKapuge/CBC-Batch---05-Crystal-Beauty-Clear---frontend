@@ -338,7 +338,7 @@ export default function HomePage() {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 mt-6">
               {products.map((p) => (
                 <ProductCard key={p.productId || p._id} product={p} />
               ))}
@@ -348,7 +348,7 @@ export default function HomePage() {
       </div>
 
       {/* Footer unchanged */}
-      <footer className="mt-10 bg-gradient-to-br from-pink-50 via-white to-pink-100 text-pink-700 pt-16 pb-10 relative overflow-hidden border-t-2 border-pink-300 shadow-inner shadow-pink-200">
+      <footer className="mt-2 bg-gradient-to-br from-pink-50 via-white to-pink-100 text-pink-700 pt-16 pb-10 relative overflow-hidden border-t-2 border-pink-300 shadow-inner shadow-pink-200">
         <div className="absolute inset-0 -z-10">
           <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-pink-100 to-white"></div>
           {[...Array(30)].map((_, i) => (
@@ -430,7 +430,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div className="mt-10 text-center border-t-2 border-pink-300 bg-white/60 backdrop-blur-md shadow-inner shadow-pink-200 py-4">
+        <div className="mt-10 text-center border-t-2 border-pink-300 bg-white/60 backdrop-blur-md shadow-inner shadow-pink-200 py-2">
           <p className="text-base text-pink-600 font-medium">
             &copy; {new Date().getFullYear()} Crystal Bloom. All rights reserved.
           </p>
