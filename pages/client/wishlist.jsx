@@ -1,4 +1,4 @@
-// New wishlist.jsx (in pages/client directory)
+// wishlist.jsx
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
@@ -28,14 +28,18 @@ export default function WishlistPage() {
 
   if (wishlist.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center">
-        <div className="text-center p-8 bg-white rounded-2xl shadow-md max-w-md">
-          <BiHeart size={60} className="text-pink-300 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">Your Wishlist is Empty</h2>
-          <p className="text-gray-600 mb-6">Add products you love to your wishlist!</p>
+      <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50 flex flex-col justify-center items-center">
+        <div className="text-center p-10 bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 max-w-md">
+          <BiHeart size={60} className="text-pink-400 mx-auto mb-4" />
+          <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-rose-500 to-pink-600 mb-3">
+            Your Wishlist is Empty
+          </h2>
+          <p className="text-gray-600 mb-6">
+            Add products you love to your wishlist!
+          </p>
           <button
             onClick={() => navigate("/")}
-            className="px-6 py-3 bg-pink-500 text-white rounded-lg font-semibold hover:bg-pink-600 transition"
+            className="px-6 py-3 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-xl font-semibold hover:shadow-lg hover:scale-105 transition-transform duration-300"
           >
             Continue Shopping
           </button>
@@ -45,42 +49,65 @@ export default function WishlistPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50 py-12">
       <div className="container mx-auto px-4">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">My Wishlist ({wishlist.length} items)</h1>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {/* Header */}
+        <div className="mb-12 text-center">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-rose-500 to-pink-600 mb-4">
+            My Wishlist
+          </h1>
+          <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto">
+            You have {wishlist.length} items saved for later
+          </p>
+          <div className="mt-6 w-24 h-1 bg-gradient-to-r from-pink-400 to-rose-400 mx-auto rounded-full"></div>
+        </div>
+
+        {/* Wishlist Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
           {wishlist.map((product) => (
             <div
               key={product.productId}
-              className="bg-white rounded-2xl shadow-md overflow-hidden flex flex-col"
+              className="group block w-48 bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl shadow-sm hover:shadow-xl hover:shadow-pink-100/50 hover:-translate-y-1 transition-all duration-300 ease-out overflow-hidden backdrop-blur-sm mx-auto"
             >
-              <div className="relative">
+              <div className="relative overflow-hidden rounded-t-xl bg-gradient-to-br from-pink-50 to-purple-50">
                 <img
-                  src={product.images?.[0] || "https://via.placeholder.com/300"}
+                  src={product.images?.[0] || "https://via.placeholder.com/150"}
                   alt={product.name}
-                  className="w-full h-64 object-cover"
+                  className="w-full h-32 object-contain p-3 group-hover:scale-110 transition-transform duration-500 ease-out"
                 />
-                <button
+                 <button
                   onClick={() => handleRemove(product.productId)}
                   className="absolute top-2 right-2 p-2 hover:bg-white rounded-full shadow  border border-white hover:border-pink-500 bg-pink-500 transition"
                 >
                   <BiTrash size={20} className="hover:text-pink-600 text-white" />
                 </button>
               </div>
-              <div className="p-4 flex flex-col flex-1">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">{product.name}</h3>
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-xl font-bold text-pink-600">${product.price.toFixed(2)}</span>
+
+              <div className="p-3 relative">
+                <h3 className="text-sm font-semibold text-gray-800 mb-1.5 truncate group-hover:text-pink-600 transition-colors duration-200">
+                  {product.name}
+                </h3>
+
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="text-lg font-bold bg-gradient-to-r from-pink-600 to-rose-500 bg-clip-text text-transparent">
+                    ${product.price.toFixed(2)}
+                  </span>
                   {product.labelledPrice > product.price && (
-                    <span className="text-sm text-gray-400 line-through">${product.labelledPrice.toFixed(2)}</span>
+                    <span className="text-xs text-gray-400 line-through">
+                      ${product.labelledPrice.toFixed(2)}
+                    </span>
                   )}
                 </div>
+
                 <button
                   onClick={() => handleAddToCart(product)}
-                  className="mt-auto py-2 bg-pink-500 text-white rounded-lg font-semibold hover:bg-pink-600 transition"
+                  className="w-full py-2 bg-pink-500 hover:bg-pink-600 text-white rounded-lg font-semibold hover:shadow-lg hover:scale-105 transition-all duration-300"
                 >
                   Add to Cart
                 </button>
+
+                {/* Hover accent line */}
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-pink-400 via-rose-400 to-purple-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
               </div>
             </div>
           ))}

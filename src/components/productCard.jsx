@@ -9,7 +9,7 @@ export default function ProductCard({ product }) {
   return (
     <Link
       to={`/overview/${product.productId}`}
-      className="group block w-48 bg-gradient-to-br from-white to-gray-50 border border-gray-100 rounded-xl shadow-sm hover:shadow-xl hover:shadow-pink-100/50 hover:-translate-y-1 transition-all duration-300 ease-out overflow-hidden backdrop-blur-sm"
+      className="group block w-48 bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl shadow-sm hover:shadow-xl hover:shadow-pink-100/50 hover:-translate-y-1 transition-all duration-300 ease-out overflow-hidden backdrop-blur-sm"
     >
       <div className="relative overflow-hidden rounded-t-xl bg-gradient-to-br from-pink-50 to-purple-50">
         <img
