@@ -35,7 +35,7 @@ export default function CartPage() {
                 <p className="text-lg font-medium text-gray-700 mb-2">Your cart is empty</p>
                 <p className="text-gray-500 mb-4">Explore our products and add items to your cart!</p>
                 <Link
-                  to="/shop"
+                  to="/collection"
                   className="inline-block px-6 py-2 bg-pink-600 text-white rounded-lg font-medium hover:bg-pink-700 transition-colors duration-200"
                 >
                   Start Shopping

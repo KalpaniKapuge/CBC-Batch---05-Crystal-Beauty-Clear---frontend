@@ -7,7 +7,6 @@ import { useGoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 
 const Card = ({ children }) => (
   <div className="relative w-full max-w-md bg-white/60 backdrop-blur-md rounded-3xl shadow-2xl overflow-hidden ring-1 ring-pink-100 hover:shadow-3xl transition-all duration-300">
-    {/* Decorative glowing blobs */}
     <div className="absolute inset-0 pointer-events-none">
       <div className="absolute -top-20 -right-20 w-60 h-60 bg-pink-100 rounded-full blur-3xl opacity-60 animate-pulse"></div>
       <div className="absolute bottom-8 left-8 w-48 h-48 bg-pink-200 rounded-full blur-2xl opacity-30"></div>
@@ -147,7 +146,7 @@ export default function LoginPage() {
             aria-label="Login with Google"
           >
             <div className="flex items-center gap-2">
-              <div className="p-2 rounded-full  ">
+              <div className="p-2 rounded-full">
                 <GrGoogle className="text-xl text-pink-600" />
               </div>
               <span className="text-pink-600">Login with Google</span>

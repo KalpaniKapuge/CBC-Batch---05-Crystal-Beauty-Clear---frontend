@@ -1,4 +1,3 @@
-// src/pages/auth/register.jsx
 import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";

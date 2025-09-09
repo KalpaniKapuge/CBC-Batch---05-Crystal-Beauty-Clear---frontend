@@ -1,4 +1,3 @@
-// wishlist.jsx
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
@@ -38,7 +37,7 @@ export default function WishlistPage() {
             Add products you love to your wishlist!
           </p>
           <button
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/collection")}
             className="px-6 py-3 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-xl font-semibold hover:shadow-lg hover:scale-105 transition-transform duration-300"
           >
             Continue Shopping
@@ -51,7 +50,6 @@ export default function WishlistPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50 py-12">
       <div className="container mx-auto px-4">
-        {/* Header */}
         <div className="mb-12 text-center">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-rose-500 to-pink-600 mb-4">
             My Wishlist
@@ -59,10 +57,9 @@ export default function WishlistPage() {
           <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto">
             You have {wishlist.length} items saved for later
           </p>
-          <div className="mt-6 w-24 h-1 bg-gradient-to-r from-pink-400 to-rose-400 mx-auto rounded-full"></div>
+          <div className="mt-8 w-24 h-1 bg-gradient-to-r from-pink-400 to-rose-400 mx-auto rounded-full"></div>
         </div>
 
-        {/* Wishlist Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
           {wishlist.map((product) => (
             <div
@@ -75,9 +72,9 @@ export default function WishlistPage() {
                   alt={product.name}
                   className="w-full h-32 object-contain p-3 group-hover:scale-110 transition-transform duration-500 ease-out"
                 />
-                 <button
+                <button
                   onClick={() => handleRemove(product.productId)}
-                  className="absolute top-2 right-2 p-2 hover:bg-white rounded-full shadow  border border-white hover:border-pink-500 bg-pink-500 transition"
+                  className="absolute top-2 right-2 p-2 hover:bg-white rounded-full shadow border border-white hover:border-pink-500 bg-pink-500 transition"
                 >
                   <BiTrash size={20} className="hover:text-pink-600 text-white" />
                 </button>
@@ -106,7 +103,6 @@ export default function WishlistPage() {
                   Add to Cart
                 </button>
 
-                {/* Hover accent line */}
                 <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-pink-400 via-rose-400 to-purple-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
               </div>
             </div>

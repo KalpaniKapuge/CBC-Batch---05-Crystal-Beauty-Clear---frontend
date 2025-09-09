@@ -55,7 +55,6 @@ export default function AddProductPage() {
     <div className="min-h-screen bg-gray-50 py-6">
       <div className="container mx-auto px-3">
         <div className="bg-white rounded-2xl shadow-md overflow-hidden">
-          {/* Header Section */}
           <div className="bg-pink-500 px-6 py-5">
             <h1 className="text-2xl lg:text-3xl font-bold text-white mb-1">
               Add New Product
@@ -65,12 +64,9 @@ export default function AddProductPage() {
             </p>
           </div>
 
-          {/* Form Content */}
           <div className="p-6 lg:p-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Left Column */}
               <div className="space-y-5">
-                {/* Product ID */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-800 mb-2">
                     Product ID *
@@ -84,7 +80,6 @@ export default function AddProductPage() {
                   />
                 </div>
 
-                {/* Product Name */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-800 mb-2">
                     Product Name *
@@ -98,7 +93,6 @@ export default function AddProductPage() {
                   />
                 </div>
 
-                {/* Alternative Names */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-800 mb-2">
                     Alternative Names
@@ -115,7 +109,6 @@ export default function AddProductPage() {
                   </p>
                 </div>
 
-                {/* Description */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-800 mb-2">
                     Product Description
@@ -129,7 +122,6 @@ export default function AddProductPage() {
                   />
                 </div>
 
-                {/* Stock */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-800 mb-2">
                     Stock Quantity *
@@ -144,16 +136,13 @@ export default function AddProductPage() {
                 </div>
               </div>
 
-              {/* Right Column */}
               <div className="space-y-5">
-                {/* Pricing Section */}
                 <div className="bg-gray-50 rounded-lg p-4">
                   <h3 className="text-base font-semibold text-gray-800 mb-4 flex items-center">
                     <span className="w-2 h-2 bg-pink-500 rounded-full mr-3"></span>
                     Pricing Information
                   </h3>
                   <div className="space-y-4">
-                    {/* Labelled Price */}
                     <div>
                       <label className="block text-sm font-semibold text-gray-800 mb-2">
                         Labelled Price
@@ -167,7 +156,6 @@ export default function AddProductPage() {
                       />
                     </div>
 
-                    {/* Actual Price */}
                     <div>
                       <label className="block text-sm font-semibold text-gray-800 mb-2">
                         Selling Price *
@@ -183,7 +171,6 @@ export default function AddProductPage() {
                   </div>
                 </div>
 
-                {/* Images Upload */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-800 mb-2">
                     Product Images *
@@ -215,20 +202,19 @@ export default function AddProductPage() {
                   )}
                 </div>
 
-                {/* Trust Badges */}
                 <div className="bg-gray-100 rounded-lg p-4">
                   <h3 className="text-base font-semibold text-gray-800 mb-3">Product Features</h3>
                   <div className="flex flex-col gap-2 text-xs text-gray-600">
                     <div className="flex items-center gap-2">
-                      <span>✓</span> 
+                      <span>✓</span>
                       <span>High quality product images recommended</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span>✓</span> 
+                      <span>✓</span>
                       <span>Detailed description increases sales</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span>✓</span> 
+                      <span>✓</span>
                       <span>Competitive pricing attracts customers</span>
                     </div>
                   </div>
@@ -236,7 +222,6 @@ export default function AddProductPage() {
               </div>
             </div>
 
-            {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row justify-end gap-3 pt-6 mt-6 border-t border-gray-300">
               <Link
                 to="/admin/products"

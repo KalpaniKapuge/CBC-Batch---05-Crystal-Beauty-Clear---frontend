@@ -1,12 +1,9 @@
-// Modified header.jsx
 import { useState, useEffect } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { BsCart } from "react-icons/bs";
-import { BiHeart } from "react-icons/bi"; // Added BiHeart for wishlist icon
-import { Link, useNavigate } from "react-router-dom";
+import { BiHeart } from "react-icons/bi";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
-
-// Lightweight JWT decoder for payload (no external lib)
 function safeParseJwt(token) {
   try {
     const parts = token.split(".");
@@ -31,6 +28,7 @@ export default function Header() {
   const [sideDrawerOpened, setSideDrawerOpened] = useState(false);
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -44,7 +42,7 @@ export default function Header() {
         });
       }
     }
-  }, []);
+  }, [location.pathname]);
 
   const logout = () => {
     localStorage.removeItem("token");
@@ -79,13 +77,36 @@ export default function Header() {
         >
           Home
         </Link>
-        <Link
-          to="/collection"
-          className="relative px-3 py-2 rounded-full hover:text-white hover:bg-pink-600 transition-all duration-200"
-        >
-          Collection
-        </Link>
-        
+        {user && user.role === "admin" ? (
+          <>
+            <Link
+              to="/collection"
+              className="relative px-3 py-2 rounded-full hover:text-white hover:bg-pink-600 transition-all duration-200"
+            >
+              Collection
+            </Link>
+            <Link
+              to="/admin/products"
+              className="relative px-3 py-2 rounded-full hover:text-white hover:bg-pink-600 transition-all duration-200"
+            >
+              Products
+            </Link>
+            
+            <Link
+              to="/admin/orders"
+              className="relative px-3 py-2 rounded-full hover:text-white hover:bg-pink-600 transition-all duration-200"
+            >
+              Orders
+            </Link>
+          </>
+        ) : (
+          <Link
+            to="/collection"
+            className="relative px-3 py-2 rounded-full hover:text-white hover:bg-pink-600 transition-all duration-200"
+          >
+            Collection
+          </Link>
+        )}
       </nav>
 
       <div className="flex items-center gap-4 ml-auto">
@@ -125,20 +146,20 @@ export default function Header() {
           </div>
         )}
 
-        <div className="hidden md:flex items-center gap-4"> {/* Added gap for multiple icons */}
+        <div className="hidden md:flex items-center gap-4">
           <Link
             to="/wishlist"
             aria-label="Go to wishlist"
-            className="flex items-center justify-center w-14 h-14 bg-gradient-to-br from-pink-500 to-pink-600 rounded-full text-white shadow-lg hover:scale-105 transform transition"
+            className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-pink-500 to-pink-600 rounded-full text-white shadow-lg hover:scale-105 transform transition"
           >
-            <BiHeart size={24} />
+            <BiHeart size={20} />
           </Link>
           <Link
             to="/cart"
             aria-label="Go to cart"
-            className="flex items-center justify-center w-14 h-14 bg-gradient-to-br from-pink-500 to-pink-600 rounded-full text-white shadow-lg hover:scale-105 transform transition"
+            className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-pink-500 to-pink-600 rounded-full text-white shadow-lg hover:scale-105 transform transition"
           >
-            <BsCart size={24} />
+            <BsCart size={20} />
           </Link>
         </div>
         <Link
@@ -182,10 +203,29 @@ export default function Header() {
               <Link to="/" onClick={closeDrawer} className="hover:text-pink-600 rounded-md px-2 py-1 transition">
                 Home
               </Link>
-              <Link to="/collection" onClick={closeDrawer} className="hover:text-pink-600 rounded-md px-2 py-1 transition">
-                Collection
-              </Link>
-              
+              {user && user.role === "admin" ? (
+                <>
+                  <Link to="/admin/products" onClick={closeDrawer} className="hover:text-pink-600 rounded-md px-2 py-1 transition">
+                    Products
+                  </Link>
+                  <Link to="/admin/add-product" onClick={closeDrawer} className="hover:text-pink-600 rounded-md px-2 py-1 transition">
+                    Add Product
+                  </Link>
+                  <Link to="/admin/orders" onClick={closeDrawer} className="hover:text-pink-600 rounded-md px-2 py-1 transition">
+                    Orders
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link to="/collection" onClick={closeDrawer} className="hover:text-pink-600 rounded-md px-2 py-1 transition">
+                    Collection
+                  </Link>
+                  <Link to="/wishlist" onClick={closeDrawer} className="flex items-center space-x-3 hover:text-pink-600 rounded-md px-2 py-1 transition">
+                    <BiHeart size={22} />
+                    <span>Wishlist</span>
+                  </Link>
+                </>
+              )}
               <Link to="/cart" onClick={closeDrawer} className="flex items-center space-x-3 hover:text-pink-600 rounded-md px-2 py-1 transition">
                 <BsCart size={22} />
                 <span>Cart</span>
