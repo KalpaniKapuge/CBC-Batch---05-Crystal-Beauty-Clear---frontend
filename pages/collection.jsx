@@ -42,15 +42,13 @@ export default function Collection() {
 
           // Create categories based on product name (first word)
           const uniqueCategories = [
-            "all",
-            ...new Set(
-              fetchedProducts
-                .map((p) =>
-                  p.name ? p.name.split(" ")[0].trim().toLowerCase() : null
-                )
-                .filter(Boolean)
-            ),
-          ];
+          "all",
+          ...new Set(
+            fetchedProducts
+              .map((p) => (p.name ? p.name.trim().toLowerCase() : null))
+              .filter(Boolean)
+          ),
+        ];
           setCategories(uniqueCategories);
         }
       } catch (error) {
@@ -78,8 +76,7 @@ export default function Collection() {
     const matchesCategory =
       selectedCategory === "all"
         ? true
-        : p.name &&
-          p.name.split(" ")[0].trim().toLowerCase() === selectedCategory;
+        : p.name && p.name.trim().toLowerCase() === selectedCategory;
 
     const matchesSearch =
       searchQuery === "" ||

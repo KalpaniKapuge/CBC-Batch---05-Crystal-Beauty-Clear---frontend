@@ -14,24 +14,44 @@ export default function ProductOverviewPage() {
 
   const [status, setStatus] = useState("loading");
   const [product, setProduct] = useState(null);
+  const [reviews, setReviews] = useState([]);
   const [quantity, setQuantity] = useState(1);
   const [mainImage, setMainImage] = useState("");
   const [inWishlist, setInWishlist] = useState(false);
+  const [rating, setRating] = useState(5);
+  const [comment, setComment] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_BACKEND_URL}/api/products/${productId}`)
-      .then((response) => {
-        setProduct(response.data);
-        setMainImage(response.data.images?.[0] || "https://via.placeholder.com/400");
-        setInWishlist(isInWishlist(response.data.productId));
+    const fetchProduct = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        console.log("Fetching product with token:", token);
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products/${productId}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setProduct(res.data);
+        setMainImage(res.data.images?.[0] || "https://via.placeholder.com/400");
+        setInWishlist(isInWishlist(res.data.productId));
         setStatus("success");
-      })
-      .catch((error) => {
-        console.log(error);
+      } catch (error) {
+        console.log("Error fetching product:", error.response?.data || error);
         setStatus("error");
         toast.error("Error fetching product details");
-      });
+      }
+    };
+
+    const fetchReviews = async () => {
+      try {
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/reviews/products/${productId}`);
+        setReviews(res.data);
+      } catch (error) {
+        console.error("Error fetching reviews:", error.response?.data || error);
+      }
+    };
+
+    fetchProduct();
+    fetchReviews();
   }, [productId]);
 
   const handleIncrease = () => setQuantity((prev) => prev + 1);
@@ -46,7 +66,47 @@ export default function ProductOverviewPage() {
       toast.success("Added to wishlist");
     }
     setInWishlist(!inWishlist);
-    navigate("/wishlist"); // Navigate to wishlist page after toggling
+    navigate("/wishlist");
+  };
+
+  const handleAddReview = async (e) => {
+    e.preventDefault();
+    if (!rating || rating < 1 || rating > 5) {
+      toast.error("Please select a valid rating");
+      return;
+    }
+    setSubmitting(true);
+    try {
+      const token = localStorage.getItem("token");
+      console.log("Submitting review with token:", token || "No token found");
+      if (!token) {
+        toast.error("Please login to add review");
+        navigate("/login");
+        return;
+      }
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/reviews/${productId}`,
+        { rating, comment },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      console.log("Review submission response:", response.data);
+      toast.success("Review added");
+      // Refetch reviews
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/reviews/products/${productId}`);
+      setReviews(res.data);
+      // Update product averages
+      const prodRes = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products/${productId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setProduct(prodRes.data);
+      setComment("");
+      setRating(5);
+    } catch (err) {
+      console.error("Review submission error:", err.response?.data || err);
+      toast.error(err.response?.data?.message || "Failed to add review");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (status === "loading") {
@@ -105,7 +165,7 @@ export default function ProductOverviewPage() {
 
                   {/* Main Image */}
                   <div className="relative flex-1 flex items-center justify-center">
-                    <div className="w-[400px] h-[400px] flex items-center justify-center border-1  rounded-xl bg-white">
+                    <div className="w-[400px] h-[400px] flex items-center justify-center border-1 rounded-xl bg-white">
                       <img
                         src={mainImage}
                         alt={product.name}
@@ -116,7 +176,7 @@ export default function ProductOverviewPage() {
                     {/* Wishlist Button */}
                     <button
                       onClick={toggleWishlist}
-                      className="absolute top-3 right-3 p-2 rounded-full bg-pink-600 shadow hover:bg-white hover:border-pink-600 hover:border-2 transition"
+                      className="absolute top-3 cursor-pointer right-3 p-2 rounded-full bg-pink-600 shadow hover:bg-white hover:border-pink-600 hover:border-2 transition"
                     >
                       {inWishlist ? (
                         <BiSolidHeart size={20} className="text-white hover:text-pink-600" />
@@ -142,8 +202,24 @@ export default function ProductOverviewPage() {
                     <div className="flex items-center gap-2 text-xs text-gray-500">
                       <span>SKU: {product.productId}</span>
                       <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
-                      <span className="text-green-600 font-medium">✓ In Stock</span>
+                      <span className="text-green-600 font-medium">
+                        {product.stock > 0 ? "✓ In Stock" : "Out of Stock"}
+                      </span>
                     </div>
+                  </div>
+
+                  {/* Rating */}
+                  <div className="flex items-center gap-2 mb-6">
+                    <div className="flex items-center gap-1 text-yellow-500">
+                      {[...Array(5)].map((_, i) => (
+                        <span key={i}>
+                          {i < Math.floor(product.averageRating) ? '★' : '☆'}
+                        </span>
+                      ))}
+                    </div>
+                    <span className="text-sm text-gray-600">
+                      {product.averageRating.toFixed(1)} ({product.numReviews} reviews)
+                    </span>
                   </div>
 
                   {/* Price Section */}
@@ -176,7 +252,7 @@ export default function ProductOverviewPage() {
                   </div>
 
                   {/* Specifications */}
-                  {product.specifications && (
+                  {product.specifications && Object.keys(product.specifications).length > 0 && (
                     <div className="mb-6">
                       <h3 className="text-base font-semibold text-gray-800 mb-3">Specifications</h3>
                       <div className="bg-gray-50 rounded-lg p-3">
@@ -266,8 +342,83 @@ export default function ProductOverviewPage() {
                     </div>
                   </div>
                 </div>
-
               </div>
+            </div>
+
+            {/* Reviews Section */}
+            <div className="mt-12 bg-white rounded-2xl shadow-md p-6">
+              <h2 className="text-2xl font-bold text-gray-800 mb-6">Customer Reviews</h2>
+              {reviews.length === 0 ? (
+                <p className="text-gray-600">No reviews yet. Be the first to review!</p>
+              ) : (
+                <div className="space-y-6">
+                  {reviews.map((review, idx) => (
+                    <div
+                      key={idx}
+                      className="bg-gray-50 rounded-lg p-4 flex gap-4"
+                    >
+                      <img
+                        src={review.user.image || "https://via.placeholder.com/50"}
+                        alt={`${review.user.firstName} ${review.user.lastName}`}
+                        className="w-12 h-12 rounded-full object-cover"
+                      />
+                      <div className="flex-1">
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="font-bold text-gray-800">
+                            {review.user.firstName} {review.user.lastName}
+                          </span>
+                          <span className="text-yellow-500 font-semibold">
+                            {review.rating} ★
+                          </span>
+                        </div>
+                        <p className="text-gray-600 mb-2">{review.comment}</p>
+                        <p className="text-sm text-gray-400">
+                          {new Date(review.createdAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Add Review Form */}
+            <div className="mt-8 bg-white rounded-2xl shadow-md p-6">
+              <h2 className="text-2xl font-bold text-gray-800 mb-6">Add Your Review</h2>
+              <form onSubmit={handleAddReview} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Rating</label>
+                  <select
+                    value={rating}
+                    onChange={(e) => setRating(Number(e.target.value))}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-pink-500"
+                  >
+                    {[1, 2, 3, 4, 5].map((r) => (
+                      <option key={r} value={r}>
+                        {r} ★
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Comment</label>
+                  <textarea
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-pink-500"
+                    rows="4"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className={`w-full py-3 rounded-lg font-semibold text-white transition ${
+                    submitting ? "bg-pink-300" : "bg-pink-500 hover:bg-pink-600"
+                  }`}
+                >
+                  {submitting ? "Submitting..." : "Submit Review"}
+                </button>
+              </form>
             </div>
           </div>
         </div>
