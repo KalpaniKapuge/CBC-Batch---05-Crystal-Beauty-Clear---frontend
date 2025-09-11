@@ -32,10 +32,10 @@ export default function ProductOverviewPage() {
         });
         setProduct(res.data);
         setMainImage(res.data.images?.[0] || "https://via.placeholder.com/400");
-        const isWishlisted = await isInWishlist(res.data.productId);
-        setInWishlist(isWishlisted);
-        console.log("Product in wishlist:", isWishlisted);
-        setStatus("success");
+const isWishlisted = await isInWishlist(res.data.productId);
+setInWishlist(isWishlisted);
+console.log("Product in wishlist:", isWishlisted);
+setStatus("success");
       } catch (error) {
         console.log("Error fetching product:", error.response?.data || error);
         setStatus("error");
@@ -117,7 +117,7 @@ export default function ProductOverviewPage() {
     } finally {
       setSubmitting(false);
     }
-  };
+};
 
   if (status === "loading") {
     return <Loading />;
