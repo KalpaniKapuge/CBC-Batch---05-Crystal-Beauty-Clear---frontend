@@ -163,53 +163,48 @@ export default function AdminOrdersPage() {
             </div>
           </div>
 
-          <div className="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200 hover:shadow-md transition duration-200">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-600 text-sm font-semibold">
-                    Total Orders
-                  </p>
-                  <p className="text-xl font-bold text-gray-900">
-                    {orders.length}
-                  </p>
-                </div>
-                <div className="w-10 h-10 bg-pink-100 rounded-lg flex items-center justify-center">
-                  <span className="text-pink-500 text-lg">📦</span>
-                </div>
-              </div>
-            </div>
-            <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200 hover:shadow-md transition duration-200">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-600 text-sm font-semibold">
-                    Pending Orders
-                  </p>
-                  <p className="text-xl font-bold text-gray-900">
-                    {orders.filter((o) => o.status?.toLowerCase() === "pending").length}
-                  </p>
-                </div>
-                <div className="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
-                  <span className="text-yellow-600 text-lg">⏳</span>
-                </div>
-              </div>
-            </div>
-            <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200 hover:shadow-md transition duration-200">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-600 text-sm font-semibold">
-                    Completed Orders
-                  </p>
-                  <p className="text-xl font-bold text-gray-900">
-                    {orders.filter((o) => o.status?.toLowerCase() === "completed").length}
-                  </p>
-                </div>
-                <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                  <span className="text-green-600 text-lg">✅</span>
-                </div>
-              </div>
-            </div>
-          </div>
+          {/* Order Stats Cards */}
+<div className="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+  <div className="bg-white rounded-lg p-6 shadow-lg border border-pink-200 hover:shadow-xl hover:border-pink-300 transition duration-300">
+    <div className="flex items-center justify-between">
+      <div>
+        <p className="text-black text-sm font-semibold uppercase tracking-wide">Total Orders</p>
+        <p className="text-2xl font-bold text-pink-600">{orders.length}</p>
+      </div>
+      <div className="text-pink-500">
+        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+        </svg>
+      </div>
+    </div>
+  </div>
+  <div className="bg-white rounded-lg p-6 shadow-lg border border-pink-200 hover:shadow-xl hover:border-pink-300 transition duration-300">
+    <div className="flex items-center justify-between">
+      <div>
+        <p className="text-black text-sm font-semibold uppercase tracking-wide">Pending Orders</p>
+        <p className="text-2xl font-bold text-pink-600">{orders.filter((o) => o.status?.toLowerCase() === "pending").length}</p>
+      </div>
+      <div className="text-pink-500">
+        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l1.5 1.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+      </div>
+    </div>
+  </div>
+  <div className="bg-white rounded-lg p-6 shadow-lg border border-pink-200 hover:shadow-xl hover:border-pink-300 transition duration-300">
+    <div className="flex items-center justify-between">
+      <div>
+        <p className="text-black text-sm font-semibold uppercase tracking-wide">Completed Orders</p>
+        <p className="text-2xl font-bold text-pink-600">{orders.filter((o) => o.status?.toLowerCase() === "completed").length}</p>
+      </div>
+      <div className="text-pink-500">
+        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
 
           {/* Rest of the component remains unchanged */}
           <div className="p-6">

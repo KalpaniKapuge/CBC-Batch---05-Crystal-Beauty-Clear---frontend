@@ -8,15 +8,35 @@ import { BiTrash, BiHeart } from "react-icons/bi";
 export default function WishlistPage() {
   const navigate = useNavigate();
   const [wishlist, setWishlist] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setWishlist(getWishlist());
+    const fetchWishlist = async () => {
+      try {
+        setLoading(true);
+        const wishlistData = await getWishlist();
+        setWishlist(Array.isArray(wishlistData) ? wishlistData : []);
+      } catch (error) {
+        console.error("Error fetching wishlist:", error);
+        setWishlist([]);
+        toast.error("Failed to load wishlist");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchWishlist();
   }, []);
 
-  const handleRemove = (productId) => {
-    const updated = removeFromWishlist(productId);
-    setWishlist(updated);
-    toast.success("Removed from wishlist");
+  const handleRemove = async (productId) => {
+    try {
+      await removeFromWishlist(productId);
+      const updatedWishlist = await getWishlist();
+      setWishlist(Array.isArray(updatedWishlist) ? updatedWishlist : []);
+      toast.success("Removed from wishlist");
+    } catch (error) {
+      console.error("Error removing from wishlist:", error);
+      toast.error("Failed to remove from wishlist");
+    }
   };
 
   const handleAddToCart = (product) => {
@@ -24,6 +44,14 @@ export default function WishlistPage() {
     toast.success("Added to cart");
     navigate("/cart");
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50 flex flex-col justify-center items-center">
+        <p className="text-gray-600">Loading wishlist...</p>
+      </div>
+    );
+  }
 
   if (wishlist.length === 0) {
     return (

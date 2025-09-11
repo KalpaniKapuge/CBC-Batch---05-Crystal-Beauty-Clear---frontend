@@ -21,7 +21,7 @@ export default function Collection() {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [searchQuery, setSearchQuery] = useState(""); // ✅ search state
+  const [searchQuery, setSearchQuery] = useState(""); 
   const [isLoading, setIsLoading] = useState(true);
   const isMountedRef = useRef(true);
 
@@ -40,13 +40,13 @@ export default function Collection() {
           const fetchedProducts = productRes.data || [];
           setProducts(fetchedProducts);
 
-          // Create categories based on product name (first word)
+          // Create categories based on product name 
           const uniqueCategories = [
             "all",
             ...new Set(
               fetchedProducts
                 .map((p) =>
-                  p.name ? p.name.split(" ")[0].trim().toLowerCase() : null
+                  p.name ? p.name.trim().toLowerCase() : null
                 )
                 .filter(Boolean)
             ),
@@ -73,13 +73,13 @@ export default function Collection() {
     };
   }, []);
 
-  // ✅ Filter products by category + search query
+  //  Filter products by category + search query
   const filteredProducts = products.filter((p) => {
     const matchesCategory =
       selectedCategory === "all"
         ? true
         : p.name &&
-          p.name.split(" ")[0].trim().toLowerCase() === selectedCategory;
+          p.name.trim().toLowerCase() === selectedCategory;
 
     const matchesSearch =
       searchQuery === "" ||
@@ -106,7 +106,7 @@ export default function Collection() {
           {/* Categories Panel */}
           <aside className="w-full lg:w-1/4">
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20 sticky top-6">
-              {/* ✅ Search Bar */}
+              {/* Search Bar */}
               <div className="mb-6">
                 <input
                   type="text"

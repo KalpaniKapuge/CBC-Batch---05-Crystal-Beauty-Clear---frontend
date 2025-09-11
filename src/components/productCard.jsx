@@ -17,9 +17,7 @@ export default function ProductCard({ product }) {
           alt={product.name}
           className="w-full h-32 object-contain p-3 group-hover:scale-110 transition-transform duration-500 ease-out"
         />
-        <div className="absolute top-2 right-2 bg-gradient-to-r from-pink-500 to-rose-400 text-white text-[10px] font-semibold px-2 py-1 rounded-full shadow-md">
-         New
-        </div>
+        
         <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </div>
 
