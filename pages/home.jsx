@@ -80,7 +80,7 @@ function Carousel() {
 
   return (
     <div
-      className="relative w-full h-80 md:h-[500px] overflow-hidden rounded-3xl shadow-2xl mt-10 bg-gradient-to-br from-pink-50 via-white to-pink-100 group"
+      className="relative w-full h-64 sm:h-80 md:h-96 lg:h-[500px] overflow-hidden rounded-3xl shadow-2xl mt-6 sm:mt-8 md:mt-10 bg-gradient-to-br from-pink-50 via-white to-pink-100 group"
       role="region"
       aria-label="Promotional carousel"
       onMouseEnter={() => {
@@ -91,9 +91,9 @@ function Carousel() {
       }}
     >
       <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-10 left-10 w-32 h-32 bg-pink-200 rounded-full blur-xl animate-pulse"></div>
-        <div className="absolute bottom-10 right-10 w-40 h-40 bg-white rounded-full blur-xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 bg-pink-200 rounded-full blur-xl animate-pulse delay-500"></div>
+        <div className="absolute top-6 sm:top-8 md:top-10 left-6 sm:left-8 md:left-10 w-24 sm:w-28 md:w-32 h-24 sm:h-28 md:h-32 bg-pink-200 rounded-full blur-xl animate-pulse"></div>
+        <div className="absolute bottom-6 sm:bottom-8 md:bottom-10 right-6 sm:right-8 md:right-10 w-28 sm:w-32 md:w-40 h-28 sm:h-32 md:h-40 bg-white rounded-full blur-xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 sm:w-24 h-20 sm:h-24 bg-pink-200 rounded-full blur-xl animate-pulse delay-500"></div>
       </div>
 
       {carouselSlides.map((slide, i) => (
@@ -129,23 +129,23 @@ function Carousel() {
               ))}
             </div>
 
-            <div className="relative z-10 bg-white/95 backdrop-blur-lg rounded-2xl p-8 ml-8 max-w-lg shadow-2xl border border-pink-200 transform hover:scale-105 transition-transform duration-300">
+            <div className="relative z-10 bg-white/95 backdrop-blur-lg rounded-2xl p-4 sm:p-6 md:p-8 ml-4 sm:ml-6 md:ml-8 max-w-xs sm:max-w-sm md:max-w-lg shadow-2xl border border-pink-200 transform hover:scale-105 transition-transform duration-300">
               <div className="absolute -top-2 -left-2 w-4 h-4 bg-gradient-to-br from-pink-500 to-pink-600 rounded-full animate-ping"></div>
               <div className="absolute -top-1 -left-1 w-2 h-2 bg-gradient-to-br from-pink-500 to-pink-600 rounded-full"></div>
 
-              <h2 className="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-pink-700 to-pink-800 mb-3 leading-tight animate-glow">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-pink-700 to-pink-800 mb-2 sm:mb-3 leading-tight animate-glow">
                 {slide.title}
               </h2>
-              <p className="text-pink-700 mb-6 text-base md:text-lg font-medium leading-relaxed">
+              <p className="text-pink-700 mb-4 sm:mb-6 text-sm sm:text-base md:text-lg font-medium leading-relaxed">
                 {slide.subtitle}
               </p>
               <Link
                 to={slide.link}
-                className="inline-flex items-center px-8 py-3 bg-gradient-to-r from-pink-500 via-pink-600 to-pink-700 text-white rounded-full font-bold text-lg shadow-lg hover:shadow-pink-500 transition-all duration-300 transform hover:scale-110 hover:-translate-y-1 group"
+                className="inline-flex items-center px-6 sm:px-8 py-2 sm:py-3 bg-gradient-to-r from-pink-500 via-pink-600 to-pink-700 text-white rounded-full font-bold text-base sm:text-lg shadow-lg hover:shadow-pink-500 transition-all duration-300 transform hover:scale-110 hover:-translate-y-1 group"
               >
                 <span className="mr-2">{slide.cta}</span>
                 <svg
-                  className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300"
+                  className="w-4 sm:w-5 h-4 sm:h-5 group-hover:translate-x-1 transition-transform duration-300"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -168,21 +168,21 @@ function Carousel() {
         onClick={() =>
           setIndex((i) => (i - 1 + carouselSlides.length) % carouselSlides.length)
         }
-        className="absolute left-6 top-1/2 -translate-y-1/2 bg-white/30 backdrop-blur-md hover:bg-white/40 p-4 rounded-full shadow-xl hover:shadow-pink-300 hover:scale-125 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-pink-400/50 z-20 group border border-pink-300"
+        className="absolute left-4 sm:left-6 top-1/2 -translate-y-1/2 bg-white/30 backdrop-blur-md hover:bg-white/40 p-3 sm:p-4 rounded-full shadow-xl hover:shadow-pink-300 hover:scale-125 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-pink-400/50 z-20 group border border-pink-300"
       >
-        <FaChevronLeft className="w-5 h-5 text-pink-700 group-hover:text-pink-900 transition-colors duration-300" />
+        <FaChevronLeft className="w-4 sm:w-5 h-4 sm:h-5 text-pink-700 group-hover:text-pink-900 transition-colors duration-300" />
       </button>
       <button
         aria-label="Next slide"
         onClick={() =>
           setIndex((i) => (i + 1) % carouselSlides.length)
         }
-        className="absolute right-6 top-1/2 -translate-y-1/2 bg-white/30 backdrop-blur-md hover:bg-white/40 p-4 rounded-full shadow-xl hover:shadow-pink-300 hover:scale-125 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-pink-400/50 z-20 group border border-pink-300"
+        className="absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 bg-white/30 backdrop-blur-md hover:bg-white/40 p-3 sm:p-4 rounded-full shadow-xl hover:shadow-pink-300 hover:scale-125 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-pink-400/50 z-20 group border border-pink-300"
       >
-        <FaChevronRight className="w-5 h-5 text-pink-700 group-hover:text-pink-900 transition-colors duration-300" />
+        <FaChevronRight className="w-4 sm:w-5 h-4 sm:h-5 text-pink-700 group-hover:text-pink-900 transition-colors duration-300" />
       </button>
 
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3 z-20">
+      <div className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 flex gap-2 sm:gap-3 z-20">
         {carouselSlides.map((_, i) => (
           <button
             key={i}
@@ -191,8 +191,8 @@ function Carousel() {
             aria-current={i === index}
             className={`relative transition-all duration-300 ${
               i === index
-                ? "w-8 h-3 bg-gradient-to-r from-pink-500 to-pink-700 scale-125 shadow-lg"
-                : "w-3 h-3 bg-white/70 hover:bg-white/90 hover:scale-110"
+                ? "w-6 sm:w-8 h-2 sm:h-3 bg-gradient-to-r from-pink-500 to-pink-700 scale-125 shadow-lg"
+                : "w-2 sm:w-3 h-2 sm:h-3 bg-white/70 hover:bg-white/90 hover:scale-110"
             } rounded-full`}
           >
             {i === index && (
@@ -218,10 +218,10 @@ function Carousel() {
 
 function Loading() {
   return (
-    <div className="w-full flex justify-center py-12">
+    <div className="w-full flex justify-center py-8 sm:py-12">
       <div className="relative">
-        <div className="animate-spin rounded-full h-12 w-12 border-4 border-pink-300"></div>
-        <div className="animate-spin rounded-full h-12 w-12 border-4 border-pink-600 border-t-transparent absolute top-0 left-0"></div>
+        <div className="animate-spin rounded-full h-10 sm:h-12 w-10 sm:w-12 border-4 border-pink-300"></div>
+        <div className="animate-spin rounded-full h-10 sm:h-12 w-10 sm:w-12 border-4 border-pink-600 border-t-transparent absolute top-0 left-0"></div>
       </div>
     </div>
   );
@@ -267,57 +267,54 @@ export default function HomePage() {
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-pink-100 relative overflow-x-hidden">
       {/* Animated background elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-pink-300 to-pink-400 rounded-full blur-3xl opacity-40 animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-pink-400 to-pink-500 rounded-full blur-3xl opacity-40 animate-pulse delay-1000"></div>
+        <div className="absolute -top-24 sm:-top-40 -right-24 sm:-right-40 w-64 sm:w-80 h-64 sm:h-80 bg-gradient-to-br from-pink-300 to-pink-400 rounded-full blur-3xl opacity-40 animate-pulse"></div>
+        <div className="absolute -bottom-24 sm:-bottom-40 -left-24 sm:-left-40 w-64 sm:w-80 h-64 sm:h-80 bg-gradient-to-br from-pink-400 to-pink-500 rounded-full blur-3xl opacity-40 animate-pulse delay-1000"></div>
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-6 py-16">
-       
-        {/* Search bar: icon only, navigates away */}
-<div className=" flex justify-center">
-  <div className="w-full max-w-3xl relative">
-    <div className="relative flex items-center gap-0 rounded-full overflow-hidden border border-pink-400 bg-white/90 backdrop-blur-xl drop-shadow-sm">
-
-      <input
-        type="text"
-        placeholder="Search makeup, skincare, collections..."
-        value={searchText}
-        onChange={(e) => setSearchText(e.target.value)}
-        aria-label="Search"
-        className="flex-1 px-6 py-3 outline-none text-pink-700 bg-transparent placeholder-pink-300 text-lg"
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            handleSearch();
-          }
-        }}
-      />
-      <div
-        onClick={handleSearch}
-        role="button"
-        aria-label="Search"
-        className="flex items-center justify-center px-5 py-3 cursor-pointer"
-      >
-        <div className="p-2 rounded-full bg-gradient-to-r from-pink-300 to-pink-500  hover:scale-140 transition-transform duration-200 ">
-          <BsSearch size={20} className="text-white" />
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-12 md:py-16">
+        {/* Search bar */}
+        <div className="flex justify-center mb-6 sm:mb-8 md:mb-10">
+          <div className="w-full max-w-md sm:max-w-lg md:max-w-3xl relative">
+            <div className="relative flex items-center gap-0 rounded-full overflow-hidden border border-pink-400 bg-white/90 backdrop-blur-xl drop-shadow-sm">
+              <input
+                type="text"
+                placeholder="Search makeup, skincare, collections..."
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                aria-label="Search"
+                className="flex-1 px-4 sm:px-6 py-2 sm:py-3 outline-none text-pink-700 bg-transparent placeholder-pink-300 text-sm sm:text-base md:text-lg"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleSearch();
+                  }
+                }}
+              />
+              <div
+                onClick={handleSearch}
+                role="button"
+                aria-label="Search"
+                className="flex items-center justify-center px-4 sm:px-5 py-2 sm:py-3 cursor-pointer"
+              >
+                <div className="p-2 rounded-full bg-gradient-to-r from-pink-300 to-pink-500 hover:scale-125 sm:hover:scale-140 transition-transform duration-200">
+                  <BsSearch size={16} sm:size={20} className="text-white" />
+                </div>
+              </div>
+            </div>
+            <div className="pointer-events-none absolute inset-0 rounded-full ring-1 ring-pink-200/60"></div>
+          </div>
         </div>
-      </div>
-    </div>
-    {/* subtle outer glow / focus ring */}
-    <div className="pointer-events-none absolute inset-0 rounded-full ring-1 ring-pink-200/60"></div>
-  </div>
-</div>
 
         <Carousel />
 
         {/* Featured Products header */}
-        <div className="mt-20 flex flex-col md:flex-row items-center justify-between gap-6 mb-8">
+        <div className="mt-12 sm:mt-16 md:mt-20 flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6 mb-6 sm:mb-8">
           <div>
-            <h2 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-pink-600 mb-2">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-pink-600 mb-2">
               Featured Products
             </h2>
-            <div className="w-16 h-1 bg-gradient-to-r from-pink-400 to-pink-600 rounded-full shadow-md"></div>
+            <div className="w-12 sm:w-16 h-1 bg-gradient-to-r from-pink-400 to-pink-600 rounded-full shadow-md"></div>
           </div>
-          <div className="text-lg text-pink-700 font-medium px-6 py-2 bg-white/70 backdrop-blur-lg rounded-full shadow-lg">
+          <div className="text-sm sm:text-base md:text-lg text-pink-700 font-medium px-4 sm:px-6 py-2 bg-white/70 backdrop-blur-lg rounded-full shadow-lg">
             {isLoading
               ? "Loading amazing products..."
               : `${products.length} stunning item${products.length !== 1 ? "s" : ""} found`}
@@ -325,30 +322,32 @@ export default function HomePage() {
         </div>
 
         {/* Featured / all products grid */}
-        <div className="mt-8">
+        <div className="mt-6 sm:mt-8">
           {isLoading ? (
             <Loading />
           ) : products.length === 0 ? (
-            <div className="text-center text-pink-700 mt-16 py-16 bg-white/60 backdrop-blur-lg rounded-3xl shadow-xl">
-              <div className="text-8xl mb-6">🔍</div>
-              <p className="text-2xl font-bold mb-2">No products available</p>
-              <p className="text-lg">
+            <div className="text-center text-pink-700 mt-12 sm:mt-16 py-12 sm:py-16 bg-white/60 backdrop-blur-lg rounded-3xl shadow-xl">
+              <div className="text-6xl sm:text-8xl mb-4 sm:mb-6">🔍</div>
+              <p className="text-xl sm:text-2xl font-bold mb-2">No products available</p>
+              <p className="text-base sm:text-lg">
                 Something went wrong or no products were returned. Please try again
                 later.
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-5 mt-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 sm:gap-5 justify-items-center">
               {products.map((p) => (
-                <ProductCard key={p.productId || p._id} product={p} />
+                <div key={p.productId || p._id} className="flex justify-center w-full max-w-sm">
+                  <ProductCard product={p} />
+                </div>
               ))}
             </div>
           )}
         </div>
       </div>
 
-      {/* Footer unchanged */}
-      <footer className="mt-2 bg-gradient-to-br from-pink-50 via-white to-pink-100 text-pink-700 pt-16 pb-10 relative overflow-hidden border-t-2 border-pink-300 shadow-inner shadow-pink-200">
+      {/* Footer */}
+      <footer className="mt-8 sm:mt-10 bg-gradient-to-br from-pink-50 via-white to-pink-100 text-pink-700 pt-12 sm:pt-16 pb-8 sm:pb-10 relative overflow-hidden border-t-2 border-pink-300 shadow-inner shadow-pink-200">
         <div className="absolute inset-0 -z-10">
           <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-pink-100 to-white"></div>
           {[...Array(30)].map((_, i) => (
@@ -366,20 +365,20 @@ export default function HomePage() {
           ))}
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 sm:gap-12">
           <div className="space-y-4">
-            <h4 className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-pink-600 mb-4 animate-glow">
+            <h4 className="text-xl sm:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-pink-600 mb-4 animate-glow">
               Crystal Bloom
             </h4>
-            <div className="w-12 h-1 bg-gradient-to-r from-pink-300 to-pink-500 rounded-full mb-4 shadow-lg"></div>
-            <p className="text-base leading-relaxed">
+            <div className="w-12 sm:w-12 h-1 bg-gradient-to-r from-pink-300 to-pink-500 rounded-full mb-4 shadow-lg"></div>
+            <p className="text-sm sm:text-base leading-relaxed">
               Premium makeup & beauty essentials. Glow with confidence every day and
               embrace your natural radiance.
             </p>
           </div>
           <div>
-            <h5 className="font-bold text-lg mb-4 text-pink-700">Shop</h5>
-            <ul className="space-y-3 text-base">
+            <h5 className="font-bold text-base sm:text-lg mb-4 text-pink-700">Shop</h5>
+            <ul className="space-y-3 text-sm sm:text-base">
               <li>
                 <Link to="/" className="hover:text-pink-600 transition-colors duration-300 hover:translate-x-1 inline-block">
                   Home
@@ -403,25 +402,25 @@ export default function HomePage() {
             </ul>
           </div>
           <div>
-            <h5 className="font-bold text-lg mb-4 text-pink-700">Contact</h5>
-            <ul className="space-y-3 text-base">
+            <h5 className="font-bold text-base sm:text-lg mb-4 text-pink-700">Contact</h5>
+            <ul className="space-y-3 text-sm sm:text-base">
               <li>Email: support@crystalbloom.com</li>
               <li>Phone: +94 70 406 8597</li>
               <li>Address: Colombo, Sri Lanka</li>
             </ul>
           </div>
           <div>
-            <h5 className="font-bold text-lg mb-4 text-pink-700">Stay in Touch</h5>
+            <h5 className="font-bold text-base sm:text-lg mb-4 text-pink-700">Stay in Touch</h5>
             <form className="flex flex-col gap-4 max-w-xs">
               <input
                 type="email"
                 placeholder="Your email"
-                className="rounded-full border-2 border-pink-300 px-6 py-3 focus:outline-none focus:ring-2 focus:ring-pink-400 text-pink-700 placeholder-pink-400 bg-white/90 backdrop-blur-sm"
+                className="rounded-full border-2 border-pink-300 px-4 sm:px-6 py-2 sm:py-3 focus:outline-none focus:ring-2 focus:ring-pink-400 text-pink-700 placeholder-pink-400 bg-white/90 backdrop-blur-sm text-sm sm:text-base"
                 aria-label="Subscribe email input"
               />
               <button
                 type="submit"
-                className="bg-pink-400 hover:bg-pink-500 text-white font-semibold px-6 py-3 rounded-full shadow-lg transition-all duration-300 hover:shadow-pink-400"
+                className="bg-pink-400 hover:bg-pink-500 text-white font-semibold px-4 sm:px-6 py-2 sm:py-3 rounded-full shadow-lg transition-all duration-300 hover:shadow-pink-400"
                 aria-label="Subscribe button"
               >
                 Subscribe
@@ -430,8 +429,8 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div className="mt-10 text-center border-t-2 border-pink-300 bg-white/60 backdrop-blur-md shadow-inner shadow-pink-200 py-2">
-          <p className="text-base text-pink-600 font-medium">
+        <div className="mt-8 sm:mt-10 text-center border-t-2 border-pink-300 bg-white/60 backdrop-blur-md shadow-inner shadow-pink-200 py-2">
+          <p className="text-sm sm:text-base text-pink-600 font-medium">
             &copy; {new Date().getFullYear()} Crystal Bloom. All rights reserved.
           </p>
         </div>
@@ -473,6 +472,14 @@ export default function HomePage() {
         .animate-gradient-x {
           background-size: 200% auto;
           animation: gradient-x 5s linear infinite;
+        }
+        @media (max-width: 640px) {
+          .animate-pulse:not(.delay-1000):not(.delay-500) {
+            animation-duration: 2s;
+          }
+          .animate-float {
+            animation-duration: 4s;
+          }
         }
       `}</style>
     </div>

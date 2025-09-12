@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export default function ForgotPasswordPage() {
   const [otpSent, setOtpSent] = useState(false);
@@ -9,9 +10,10 @@ export default function ForgotPasswordPage() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
 
   const sendOTP = async () => {
-    if (!email) {
+    if (!email.trim()) {
       toast.error("Email is required");
       return;
     }
@@ -19,16 +21,30 @@ export default function ForgotPasswordPage() {
       setIsSubmitting(true);
       const res = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/users/send-otp`,
-        { email }
+        { email: email.trim() },
+        { headers: { "Content-Type": "application/json" } }
       );
       setOtpSent(true);
       toast.success("OTP sent to your email. Check your inbox.");
-      console.log(res.data);
+      console.log("sendOTP response:", res.data);
     } catch (error) {
-      console.error(error);
-      toast.error(
-        error.response?.data?.message || "Failed to send OTP. Try again."
-      );
+      console.error("sendOTP error:", {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data,
+        headers: error.response?.headers,
+      });
+      const errorMessage =
+        error.response?.data?.message || "Failed to send OTP. Please try again.";
+      const errorDetails = error.response?.data?.error || "";
+      const errorName = error.response?.data?.errorName || "";
+      const errorCode = error.response?.data?.errorCode || "";
+      toast.error(`${errorMessage}${errorDetails ? `: ${errorDetails}` : ""}`);
+      if (error.response?.status === 404) {
+        toast.error("User not found. Please check your email or register.");
+      } else if (error.response?.status === 500) {
+        toast.error(`Server error: ${errorMessage}${errorName ? ` (${errorName}${errorCode ? `, Code: ${errorCode}` : ""})` : ""}`);
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -52,13 +68,23 @@ export default function ForgotPasswordPage() {
           email,
           otp: otpInNumberFormat,
           newPassword,
-        }
+        },
+        { headers: { "Content-Type": "application/json" } }
       );
       toast.success(res.data.message || "Password reset successful");
-      console.log(res.data);
-      // Optionally clear form or redirect to login
+      console.log("verifyOtp response:", res.data);
+      setEmail("");
+      setOtp("");
+      setNewPassword("");
+      setConfirmPassword("");
+      setOtpSent(false);
+      navigate("/login");
     } catch (error) {
-      console.error(error);
+      console.error("verifyOtp error:", {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data,
+      });
       toast.error(
         error.response?.data?.message || "Invalid OTP or failed to reset"
       );
@@ -99,9 +125,9 @@ export default function ForgotPasswordPage() {
               </div>
               <button
                 onClick={sendOTP}
-                disabled={isSubmitting || !email}
+                disabled={isSubmitting || !email.trim()}
                 className={`w-full flex justify-center items-center gap-2 ${
-                  isSubmitting
+                  isSubmitting || !email.trim()
                     ? "bg-pink-300 cursor-not-allowed"
                     : "bg-pink-500 hover:bg-pink-600"
                 } text-white py-3 rounded-lg font-medium transition`}
@@ -161,7 +187,11 @@ export default function ForgotPasswordPage() {
                     newPassword !== confirmPassword
                   }
                   className={`flex-1 flex justify-center items-center gap-2 ${
-                    isSubmitting
+                    isSubmitting ||
+                    !otp ||
+                    !newPassword ||
+                    !confirmPassword ||
+                    newPassword !== confirmPassword
                       ? "bg-pink-300 cursor-not-allowed"
                       : "bg-pink-600 hover:bg-pink-700"
                   } text-white py-3 rounded-lg font-medium transition`}
@@ -178,6 +208,15 @@ export default function ForgotPasswordPage() {
               </div>
             </>
           )}
+          <div className="text-center text-sm text-gray-500 mt-4">
+            Remembered your password?{" "}
+            <span
+              onClick={() => navigate("/login")}
+              className="text-pink-600 font-semibold cursor-pointer hover:underline"
+            >
+              Back to Login
+            </span>
+          </div>
         </div>
       </div>
     </div>

@@ -118,6 +118,14 @@ export default function LoginPage() {
                 required
               />
             </div>
+            <div className="text-right">
+              <span
+                onClick={() => navigate("/forgot-password")}
+                className="text-pink-600 font-semibold cursor-pointer hover:underline text-sm"
+              >
+                Forgot Password?
+              </span>
+            </div>
             <button
               type="submit"
               className={`w-full text-xl flex cursor-pointer justify-center items-center gap-2 py-3 rounded-xl font-semibold text-white transition-all duration-200 shadow-lg transform ${
