@@ -32,10 +32,10 @@ export default function ProductOverviewPage() {
         });
         setProduct(res.data);
         setMainImage(res.data.images?.[0] || "https://via.placeholder.com/400");
-const isWishlisted = await isInWishlist(res.data.productId);
-setInWishlist(isWishlisted);
-console.log("Product in wishlist:", isWishlisted);
-setStatus("success");
+        const isWishlisted = await isInWishlist(res.data.productId);
+        setInWishlist(isWishlisted);
+        console.log("Product in wishlist:", isWishlisted);
+        setStatus("success");
       } catch (error) {
         console.log("Error fetching product:", error.response?.data || error);
         setStatus("error");
@@ -59,7 +59,19 @@ setStatus("success");
   const handleIncrease = () => setQuantity((prev) => prev + 1);
   const handleDecrease = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
+  const checkLoginAndNavigate = () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error("Please login first");
+      navigate("/login");
+      return false;
+    }
+    return true;
+  };
+
   const toggleWishlist = async () => {
+    if (!checkLoginAndNavigate()) return;
+    
     if (!product) {
       console.log("No product data, cannot toggle wishlist");
       return;
@@ -79,8 +91,42 @@ setStatus("success");
     }
   };
 
+  const handleAddToCart = () => {
+    if (!checkLoginAndNavigate()) return;
+    
+    try {
+      addToCart(product, quantity);
+      toast.success(`Added ${quantity} item${quantity > 1 ? "s" : ""} to cart`);
+      navigate("/cart");
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      toast.error("Failed to add to cart");
+    }
+  };
+
+  const handleBuyNow = () => {
+    if (!checkLoginAndNavigate()) return;
+    
+    navigate("/checkout", {
+      state: {
+        cart: [
+          {
+            productId: product.productId,
+            name: product.name,
+            image: product.images[0] || "https://via.placeholder.com/150",
+            price: product.price,
+            labelledPrice: product.labelledPrice,
+            qty: quantity,
+          },
+        ],
+      },
+    });
+  };
+
   const handleAddReview = async (e) => {
     e.preventDefault();
+    if (!checkLoginAndNavigate()) return;
+    
     if (!rating || rating < 1 || rating > 5) {
       toast.error("Please select a valid rating");
       return;
@@ -89,11 +135,6 @@ setStatus("success");
     try {
       const token = localStorage.getItem("token");
       console.log("Submitting review with token:", token || "No token found");
-      if (!token) {
-        toast.error("Please login to add review");
-        navigate("/login");
-        return;
-      }
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/reviews/${productId}`,
         { rating, comment },
@@ -117,7 +158,7 @@ setStatus("success");
     } finally {
       setSubmitting(false);
     }
-};
+  };
 
   if (status === "loading") {
     return <Loading />;
@@ -306,32 +347,13 @@ setStatus("success");
                     {/* Action Buttons */}
                     <div className="flex flex-col sm:flex-row gap-3">
                       <button
-                        onClick={() => {
-                          addToCart(product, quantity);
-                          toast.success(`Added ${quantity} item${quantity > 1 ? "s" : ""} to cart`);
-                          navigate("/cart");
-                        }}
+                        onClick={handleAddToCart}
                         className="flex-1 bg-pink-500 text-white py-3 rounded-lg font-semibold text-base hover:bg-pink-600 transition"
                       >
                         Add to Cart
                       </button>
                       <button
-                        onClick={() => {
-                          navigate("/checkout", {
-                            state: {
-                              cart: [
-                                {
-                                  productId: product.productId,
-                                  name: product.name,
-                                  image: product.images[0] || "https://via.placeholder.com/150",
-                                  price: product.price,
-                                  labelledPrice: product.labelledPrice,
-                                  qty: quantity,
-                                },
-                              ],
-                            },
-                          });
-                        }}
+                        onClick={handleBuyNow}
                         className="flex-1 text-pink-500 bg-white py-3 border-2 border-pink-500 rounded-lg font-semibold text-base hover:bg-pink-200 transition"
                       >
                         Buy Now

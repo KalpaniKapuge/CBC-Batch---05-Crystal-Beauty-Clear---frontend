@@ -85,7 +85,6 @@ export default function LoginPage() {
           <p className="text-center text-gray-600 mb-10 mt-4">
             Log in to access your beauty essentials.
           </p>
-
           <form onSubmit={handleLoginSubmit} className="space-y-5">
             <div className="relative">
               <label className="sr-only" htmlFor="email">
@@ -132,13 +131,11 @@ export default function LoginPage() {
               {isSubmitting ? "Logging in..." : "Login"}
             </button>
           </form>
-
           <div className="flex items-center my-6">
             <div className="flex-1 h-px bg-pink-300"></div>
             <div className="mx-3 text-sm text-pink-500 font-medium">OR</div>
             <div className="flex-1 h-px bg-pink-300"></div>
           </div>
-
           <button
             onClick={() => googleLogin()}
             type="button"
@@ -152,7 +149,6 @@ export default function LoginPage() {
               <span className="text-pink-600">Login with Google</span>
             </div>
           </button>
-
           <div className="mt-6 text-center text-sm text-gray-500">
             Don’t have an account?{" "}
             <span
