@@ -78,7 +78,7 @@ export default function LoginPage() {
   return (
     <GoogleOAuthProvider clientId={clientId || ""}>
       <div className="w-full min-h-screen flex items-center justify-center bg-gradient-to-r from-white via-pink-200 to-white px-4">
-        <Card>
+        <Card className="mt-10 mb-20">
           <h2 className="text-4xl font-extrabold mb-2 text-pink-500 text-center">
             Welcome Back
           </h2>

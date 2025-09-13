@@ -50,12 +50,12 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="w-full min-h-screen flex items-center justify-center bg-gradient-to-r from-white via-pink-50 to-white px-4">
-      <Card>
+    <div className="w-full min-h-screen flex items-center justify-center bg-gradient-to-r from-white via-pink-200 to-white px-4">
+      <Card className="mt-10 mb-20">
         <h2 className="text-4xl font-extrabold mb-2 text-pink-500 text-center">
           Create Account
         </h2>
-        <p className="text-center text-gray-600 mb-8">
+        <p className="text-center text-gray-600 mb-10 mt-4">
           Join us and get your beauty essentials.
         </p>
 
@@ -132,7 +132,7 @@ export default function RegisterPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`w-full flex justify-center items-center gap-2 py-3 rounded-xl font-semibold text-white transition-all duration-200 text-xl cursor-pointer shadow-lg transform ${
+            className={`w-full text-xl flex cursor-pointer justify-center items-center gap-2 py-3 rounded-xl font-semibold text-white transition-all duration-200 shadow-lg transform ${
               isSubmitting
                 ? "bg-pink-300 cursor-not-allowed"
                 : "bg-gradient-to-r from-pink-400 to-pink-500 hover:scale-[1.03]"
