@@ -186,7 +186,7 @@ export default function ForgotPasswordPage() {
                     !confirmPassword ||
                     newPassword !== confirmPassword
                   }
-                  className={`flex-1 flex justify-center items-center gap-2 ${
+                  className={`flex-1 flex justify-center cursor-pointer items-center gap-2 ${
                     isSubmitting ||
                     !otp ||
                     !newPassword ||
@@ -201,7 +201,7 @@ export default function ForgotPasswordPage() {
                 <button
                   onClick={handleResend}
                   disabled={isSubmitting}
-                  className="flex-1 flex justify-center items-center gap-2 border border-pink-500 text-pink-600 py-3 rounded-lg hover:bg-pink-50 transition font-medium"
+                  className="flex-1 flex cursor-pointer justify-center items-center gap-2 border border-pink-500 text-pink-600 py-3 rounded-lg hover:bg-pink-50 transition font-medium"
                 >
                   Resend OTP
                 </button>

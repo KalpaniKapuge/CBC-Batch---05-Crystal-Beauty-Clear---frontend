@@ -1,4 +1,3 @@
-// Modified App.jsx
 import { Routes, Route } from "react-router-dom";
 import Header from "./components/header.jsx";
 import HomePage from "../pages/home.jsx";
@@ -15,7 +14,7 @@ import AddProductPage from "../admin/addProductPage.jsx";
 import EditProductPage from "../admin/editProductPage.jsx";
 import AdminOrdersPage from "../admin/adminOrdersPage.jsx";
 import Collection from "../pages/collection.jsx";
-import ForgotPasswordPage from "../pages/forgetPassword.jsx"; // Added import
+import ForgotPasswordPage from "../pages/forgetPassword.jsx"; 
 
 export default function App() {
   return (
@@ -28,7 +27,7 @@ export default function App() {
         <Route path="/collection" element={<Collection />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/forgot-password" element={<ForgotPasswordPage />} /> {/* Added route */}
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/checkout" element={<CheckoutPage />} />
         <Route path="/wishlist" element={<WishlistPage />} />

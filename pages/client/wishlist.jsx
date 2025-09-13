@@ -66,7 +66,7 @@ export default function WishlistPage() {
           </p>
           <button
             onClick={() => navigate("/collection")}
-            className="px-6 py-3 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-xl font-semibold hover:shadow-lg hover:scale-105 transition-transform duration-300"
+            className="px-6 py-3 cursor-pointer bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-xl font-semibold hover:shadow-lg hover:scale-105 transition-transform duration-300"
           >
             Continue Shopping
           </button>
